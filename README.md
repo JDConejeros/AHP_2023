@@ -2,16 +2,21 @@
 
 Codes and data about alcohol harm paradox 2023.
 
-|-AHO_2023
+├── input: información externa como datos, imágenes, .bib:
+|   ├── data-orig: archivos de datos originales y metadatos disponibles
+|   ├── data-proc: archivos de datos procesados
+│   ├── imagenes
+│   ├── bib: archivos de bibliografía
 |
-|---Codes
+├── codes:
+│   - clean_data.R
+│   - descriptives.R
+│
+├── output: tablas, gráficos y otras salidas del procesamiento.
+│   ├── graphs
+│   ├── tables
 |
-|---Inputs: Data
-|
-|---Outputs: Tables and Graphs.
-|
-|---README.md: Description of the repo. 
-|
-|---AHP_2023.Rproj -> Project file to work in RStudio
-|
-|---.gitignore -> ignore files in the repo.
+- readme.md : Descripción del repositorio.
+- AHP_2023.Rproj : Proyecto para conectarse desde RStudio.
+
+
