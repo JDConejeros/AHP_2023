@@ -1,0 +1,22 @@
+Paper: AHP Latin america
+
+- Abstract: definir en unas 200 palabras: contexto, objetivo datos y métodos. (Responsable: Pablin)
+- Actualizar datos: 
+
+  - Generar codebook (Sofi)
+  - Generar matriz de datos
+  - Buscar información que se pueda agregar a nivel de encuestas, por ejemplo: latinobarometro (Responsable: Pablin): https://www.latinobarometro.org/latContents.jsp
+  - Visualizaciones exploratorias (Responsable: José y Pablin)
+- Pensar en counfounders que puedan ser relevantes para LA y ver la posibilidad de controlarlos con data disponible (Responsable: ambos).
+  
+Algunos papers mencionados por EU:
+
+https://www.thelancet.com/journals/lancet/article/PIIS0140-6736(18)31310-2/fulltext
+https://www.thelancet.com/journals/langas/article/PIIS2468-1253(19)30349-8/fulltext
+
+API’s extracciones de datos: 
+
+- IHME -> https://api.healthdata.org/sdg/
+- OWID -> https://github.com/owid
+- GOH: https://www.who.int/data/gho/info/gho-odata-api
+- WB: https://documents.worldbank.org/en/publication/documents-reports/api
