@@ -27,9 +27,9 @@ ahp_data <- ingreso_dataset %>%
 
 # Export ------------------------------------------------------------------
 
-write.dta(datos, "ruta/archivo.dta")
-write.csv(datos, "ruta/archivo.csv", row.names = FALSE)
-
+write.dta(ahp_data, "generacion_data/out/ahp_data.dta")
+write.csv(ahp_data, "generacion_data/out/ahp_data.csv", row.names = FALSE)
+save(ahp_data, file = "generacion_data/out/ahp_data.RData")
 
 
 

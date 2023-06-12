@@ -469,6 +469,17 @@ consumo_dataset <- apc %>%
   full_join(ahu_12m, by = c("iso3c", "year"))
 
 
+# iso3c --> country
+consumo_dataset <- consumo_dataset %>% 
+  mutate(iso3c = labelled(iso3c, 
+                          labels = setNames(unique(iso3c), 
+                                            countrycode(unique(iso3c),
+                                                        origin = 'iso3c',
+                                                        destination = 'country.name')),
+                          label = "Country iso3c code"),
+         year = labelled(year, label = "Year")) %>% 
+  rename("country" = "iso3c")
+
 # Success message!
 cat("\n\3 Cargado con éxito: (data.frame)  \033[32mconsumo_dataset\033[32m\n\n")
 
