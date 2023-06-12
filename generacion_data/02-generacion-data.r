@@ -4,19 +4,33 @@ source("generacion_data/00-packages.r")
 source("generacion_data/01-functions.r")
 
 # Runtime: ??
-source("generacion_data/01-Dano_por_alcohol/dano_alcohol_dataset.r")
+source("generacion_data/files/dano_alcohol_dataset.r")
 
 # Runtime: 1 min max.
-source("generacion_data/02-Ingreso/ingreso_dataset.r") %>% suppressWarnings
+source("generacion_data/files/ingreso_dataset.r") %>% suppressWarnings
 
-# Coming soon!
-# source("generacion_data/03-Consumo-OH/nivel-consumo-dataset.r")
-
-# source("generacion_data/03-Consumo-OH/patron-consumo-dataset.r")
+# Runtime: 1 sec max.
+source("generacion_data/files/consumo_dataset.r") %>% suppressWarnings
 
 # source("generacion_data/04-Desigualdades/desigualdades-dataset.r")
 
 # source("generacion_data/05-Caracteristicas-poblacion/caracteristicas-poblacion-dataset.r")
 
 # source("generacion_data/06-Caracteristicas-ambientales/caracteristicas-ambientales-dataset.r")
+
+
+# Data merge --------------------------------------------------------------
+
+ahp_data <- ingreso_dataset %>% 
+  inner_join(consumo_dataset, by = c("year", "country"))
+
+
+# Export ------------------------------------------------------------------
+
+write.dta(datos, "ruta/archivo.dta")
+write.csv(datos, "ruta/archivo.csv", row.names = FALSE)
+
+
+
+
 

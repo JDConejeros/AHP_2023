@@ -15,6 +15,8 @@ comprobar_serie <- function(serie) {
 
 comprobar_serie(c(1:3,5:6))
 
-serie <- c(1:3, 5:6)
+serie <- c(1:100)
 
+comprobar_serie(serie)
 
+# Ok, puede que elimine esta función jaja, pero apaña para ver si la serie de años es continua.

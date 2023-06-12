@@ -9,7 +9,7 @@ start = Sys.time()
 
 # 6-gdp -------------------------------------------------------------------
 
-# Data import
+# Import data
 gdp <- WDI(indicator = "NY.GDP.MKTP.CD")
 
 # Extracting variables of interest
@@ -31,7 +31,7 @@ gdp <- gdp %>%
 
 # 7-gdp-per-capita --------------------------------------------------------
 
-# Data import
+# Import data
 gdp_per_capita <- WDI(indicator = "NY.GDP.PCAP.CD") 
 
 # Extract and rename variables of interest
@@ -51,14 +51,13 @@ gdp_per_capita <- gdp_per_capita %>%
   mutate(gdp_per_capita = as.numeric(gdp_per_capita),
          gdp_per_capita = labelled(gdp_per_capita, label = "Nominal GDP per capita (current US$)"))
 
-
 # 8-hcpi ------------------------------------------------------------------
 
 # Database site: https://www.worldbank.org/en/research/brief/inflation-database
 # Download link: https://thedocs.worldbank.org/en/doc/1ad246272dbbc437c74323719506aa0c-0350012021/related/Inflation-data.zip
 
 # Import data file
-hcpi <- read_dta("generacion_data/02-Ingreso/data/Inflation-data/hcpi_a.dta") %>% select(-c(59:64))
+hcpi <- read_dta("generacion_data/files/data/Inflation-data/hcpi_a.dta") %>% select(-c(59:64))
 
 # Convert to long data
 hcpi <- hcpi %>% 
@@ -154,8 +153,8 @@ gdp_real_per_capita <- gdp_real_per_capita %>%
          gdp_real_per_capita = labelled(gdp_real_per_capita, label = "Real GDP per capita (adjusted for inflation and differences in cost of living)"))
 
 
-# Confirmation message ----------------------------------------------------
 
+# Merge -------------------------------------------------------------------
 
 ingreso_dataset <- gdp %>% 
   full_join(gdp_per_capita, by = c("iso3c", "year")) %>% 
