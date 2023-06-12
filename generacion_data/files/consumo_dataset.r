@@ -51,7 +51,7 @@ apc <- apc %>%
 # 11-rec_apc --------------------------------------------------------------
 
 # Import data
-rec_apc <- gho_data("SA_0000001400")
+rec_apc <- gho_data("SA_0000001400") 
 
 rec_apc$SpatialDim %>% unique %>% length
 
@@ -136,66 +136,71 @@ tourist <- tourist %>%
 ## Suspendida temporalmente
 
 # Import data
-# drinkers_1 <- gho_data("SA_0000001404")
-# drinkers_2 <- gho_data("SA_0000001404_ARCHIVED")
+drinkers_1 <- gho_data("SA_0000001404") # 2016, 3 cat, n = 191
+drinkers_2 <- gho_data("SA_0000001404_ARCHIVED") # 2005, 2010, 3 cat, n = 193
+
+## Por algún motivo, están duplicados algunas observaciones de drinkers2.
+# drinkers_2 %>% group_by(SpatialDim, Dim1) %>% count(TimeDim) %>% View()
 
 # Join data
-# drinkers <- drinkers_1 %>% 
-#   full_join(drinkers_2, by = names(.)) ; rm(drinkers_1, drinkers_2)
+drinkers <- drinkers_1 %>%
+  full_join(drinkers_2, by = names(.)) ; rm(drinkers_1, drinkers_2)
 
 # Rename variables and prepare categories
-# drinkers <- drinkers[,c(4,6,8,16)] %>% 
-#   setNames(c("iso3c", "year", "dim", "drinkers")) %>% 
-#   mutate(dim = recode(dim, "BTSX" = "", "MLE" = "_male", "FMLE" = "_female"))
+drinkers <- drinkers[,c(4,6,8,16)] %>%
+  setNames(c("iso3c", "year", "dim", "drinkers")) %>%
+  mutate(dim = recode(dim, "BTSX" = "", "MLE" = "_male", "FMLE" = "_female"))
 
 # Generar una columna para hombres y mujeres, según su categoría
-# drinkers <- drinkers %>%
-#   pivot_wider(names_from = dim,
-#               values_from = drinkers,
-#               names_prefix = "drinkers",
-#               values_fn = list) %>% 
-#   relocate(c(1, 2:4, 5))
+drinkers <- drinkers %>%
+  pivot_wider(names_from = dim,
+              values_from = drinkers,
+              names_prefix = "drinkers",
+              values_fn = {mean}) %>% # Cambiar esto
+  relocate(c(1, 2:4, 5))
 
 # Labelled variables
-# drinkers <- drinkers %>% 
-#   mutate(drinkers = labelled(drinkers, label = "Drinkers only total per capita (15+ years) alcohol consumption (in litres of pure alcohol)"),
-#          drinkers_male = labelled(drinkers_male, label = "Drinkers only total per capita (15+ years) alcohol consumption (in litres of pure alcohol): males"),
-#          drinkers_female = labelled(drinkers_female, label = "Drinkers only total per capita (15+ years) alcohol consumption (in litres of pure alcohol): females"))
+drinkers <- drinkers %>%
+  mutate(drinkers = labelled(drinkers, label = "Drinkers only total per capita (15+ years) alcohol consumption (in litres of pure alcohol)"),
+         drinkers_male = labelled(drinkers_male, label = "Drinkers only total per capita (15+ years) alcohol consumption (in litres of pure alcohol): males"),
+         drinkers_female = labelled(drinkers_female, label = "Drinkers only total per capita (15+ years) alcohol consumption (in litres of pure alcohol): females"))
 
 
 # 15-abstainers -----------------------------------------------------------
 
 # Import data
-# abstainers_1 <- gho_data("SA_0000001409")
-# abstainers_2 <- gho_data("SA_0000001409_ARCHIVED")
-# 
-# ## Omitted "SA_0000001409_ARCHIVED" n = 97 countries
-# 
-# # Join data
-# abstainers <- abstainers_1 %>% 
-#   full_join(abstainers_2, by = names(.)) ; rm(abstainers_1, abstainers_2)
-# 
-# # Rename variables and prepare categories
-# abstainers <- abstainers[,c(4,6,8,15)] %>% 
-#   setNames(c("iso3c", "year", "dim", "abstainers")) %>% 
-#   mutate(dim = recode(dim, "BTSX" = "", "MLE" = "_male", "FMLE" = "_female"))
-# 
-# # Fix numeric variables
-# abstainers <- abstainers %>% 
-#   mutate(abstainers = str_replace_all(abstainers, "\\s*\\[.*\\]", "") %>% as.numeric)
-# 
-# # Generar una columna para hombres y mujeres, según su categoría
-# abstainers <- abstainers %>%
-#   pivot_wider(names_from = dim,
-#               values_from = abstainers,
-#               names_prefix = "abstainers") %>% 
-#   relocate(c(1, 2:4, 5))
-# 
-# # Labelled variables
-# abstainers <- abstainers %>% 
-#   mutate(abstainers = labelled(abstainers, label = "Abstainers lifetime (15+ years)"),
-#          abstainers_male = labelled(abstainers_male, label = "Abstainers lifetime (15+ years): males"),
-#          abstainers_female = labelled(abstainers_female, label = "Abstainers lifetime (15+ years): females"))
+abstainers_1 <- gho_data("SA_0000001409")
+abstainers_2 <- gho_data("SA_0000001409_ARCHIVED")
+
+## Omitted "SA_0000001409_ARCHIVED" n = 97 countries
+
+# Join data
+abstainers <- abstainers_1 %>%
+  full_join(abstainers_2, by = names(.)) ; rm(abstainers_1, abstainers_2)
+
+# Rename variables and prepare categories
+abstainers <- abstainers[,c(4,6,8,15)] %>%
+  setNames(c("iso3c", "year", "dim", "abstainers")) %>%
+  mutate(dim = recode(dim, "BTSX" = "", "MLE" = "_male", "FMLE" = "_female"),
+         abstainers = as.numeric(abstainers))
+
+# Fix numeric variables
+abstainers <- abstainers %>%
+  mutate(abstainers = str_replace_all(abstainers, "\\s*\\[.*\\]", "") %>% as.numeric)
+
+# Generar una columna para hombres y mujeres, según su categoría
+abstainers <- abstainers %>%
+  pivot_wider(names_from = dim,
+              values_from = abstainers,
+              names_prefix = "abstainers",
+              values_fn = {mean}) %>% # Cambiar esto ------
+  relocate(c(1, 2:4, 5))
+
+# Labelled variables
+abstainers <- abstainers %>%
+  mutate(abstainers = labelled(abstainers, label = "Abstainers lifetime (15+ years)"),
+         abstainers_male = labelled(abstainers_male, label = "Abstainers lifetime (15+ years): males"),
+         abstainers_female = labelled(abstainers_female, label = "Abstainers lifetime (15+ years): females"))
 
 
 # 16-absteiners_12m -------------------------------------------------------
@@ -458,7 +463,9 @@ ahu_12m <- ahu_12m %>%
 consumo_dataset <- apc %>% 
   full_join(rec_apc, by = c("iso3c", "year")) %>% 
   full_join(unrec_apc, by = c("iso3c", "year")) %>% 
-  full_join(tourist, by = c("iso3c", "year")) %>% 
+  full_join(tourist, by = c("iso3c", "year"))  %>% 
+  full_join(drinkers, by = c("iso3c", "year")) %>% 
+  full_join(abstainers, by = c("iso3c", "year")) %>% 
   full_join(abstainers_12m, by = c("iso3c", "year")) %>% 
   full_join(former_drinkers, by = c("iso3c", "year")) %>% 
   full_join(consumers_12m, by = c("iso3c", "year")) %>% 
@@ -481,8 +488,9 @@ consumo_dataset <- consumo_dataset %>%
   rename("country" = "iso3c")
 
 # Success message!
-cat("\n\3 Cargado con éxito: (data.frame)  \033[32mconsumo_dataset\033[32m\n\n")
+cat("\n\3 Cargado con éxito: (data.frame)  consumo_dataset\n")
 
 # Print runtime
 end = Sys.time() - start ; print(end)
 
+rm(list = ls()[!(ls() %in% c("consumo_dataset", "ingreso_dataset"))]) ## Solución no elegante

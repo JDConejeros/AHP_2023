@@ -177,7 +177,7 @@ ingreso_dataset <- ingreso_dataset %>%
 
 
 # Success message!
-print(cat("\n\3 Cargado con éxito: dataset \033[32mingreso_dataset\033[32m\n\n"))
+print(cat("\n\3 Cargado con éxito: dataset ingreso_dataset\n"))
 
 end = Sys.time() - start ; print(end)
 
