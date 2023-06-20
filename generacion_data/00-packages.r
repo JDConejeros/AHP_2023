@@ -1,16 +1,11 @@
 
 # Data handling
-library(tidyverse)
-library(janitor)
-library(countrycode)
-library(foreign)
+pacman::p_load(# data handling
+               janitor, countrycode, foreign, tidyverse,
 
-# APIs request libraries
-library(WDI)
-library(owidR)
-library(ghost)
-
-# Manual data import
-library(haven)
-
+               # APIs
+               WDI, owidR, ghost,
+               
+               # Data import
+               haven)
 
