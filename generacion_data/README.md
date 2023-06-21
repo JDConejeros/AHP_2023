@@ -7,8 +7,10 @@
 
 ## Tareas de la generación de la data
 
+### Importantes
+
 - [ ] Extracción de datos de las dimensiones.
-  - [ ] Daño por alcohol (durante el día)
+  - [x] Daño por alcohol (durante el día)
   - [x] Ingreso
   - [x] Consumo OH
   - [x] Desigualdades
@@ -18,5 +20,10 @@
   - [ ] Comorbilidades
   - [ ] Infraestructura y servicios públicos
   - [ ] Políticas públicas
+- [ ] Tabla de missings por variable.
+- [ ] Investigación del proceso de extracción, origen, estimación y descripción de lo que mide cada variable. Especialmente, las variables de **Ingreso**.
+
+### Tareas secundarias
+
 - [ ] Mejorar el proceso de extracción de las variables de "Daño por Alcohol", consultando la **API de IHME**.
 - [ ] Automatizar los procesos de extracción de datos, especialmente si provienen de fuentes similares.
