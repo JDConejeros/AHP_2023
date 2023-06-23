@@ -3,8 +3,8 @@ source("generacion_data/00-packages.r")
 
 source("generacion_data/01-functions.r")
 
-# Runtime: ??
-source("generacion_data/files/dano_alcohol_dataset.r")
+# Runtime: 2 sec max.
+source("generacion_data/files/dano_alcohol_dataset.r") %>% suppressWarnings
 
 # Runtime: 1 min max.
 source("generacion_data/files/ingreso_dataset.r") %>% suppressWarnings
@@ -21,8 +21,10 @@ source("generacion_data/files/consumo_dataset.r") %>% suppressWarnings
 
 # Data merge --------------------------------------------------------------
 
-ahp_data <- ingreso_dataset %>% 
-  inner_join(consumo_dataset, by = c("year", "country"))
+ahp_data <- dano_alcohol_dataset %>% 
+  full_join(ingreso_dataset, by = c("year", "country")) %>% 
+  full_join(consumo_dataset, by = c("year", "country")) %>% 
+
 
 
 # Export ------------------------------------------------------------------
