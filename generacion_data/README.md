@@ -27,3 +27,4 @@
 
 - [ ] Mejorar el proceso de extracción de las variables de "Daño por Alcohol", consultando la **API de IHME**.
 - [ ] Automatizar los procesos de extracción de datos, especialmente si provienen de fuentes similares.
+- [ ] Añadir un archivo de proyecto a la carpeta generacion_data y cambiar los directorios.
