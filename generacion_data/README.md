@@ -1,6 +1,8 @@
 
 # Generacion Data
 
+## Instrucciones de uso
+
 - Ejecutar el archivo generacion_data.r para generar la data extraída hasta el momento.
 
   - 🎯 Comentarios de la versión actual en: [Comentarios](Comentarios.md). 
