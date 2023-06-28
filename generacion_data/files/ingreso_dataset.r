@@ -175,6 +175,7 @@ ingreso_dataset <- ingreso_dataset %>%
          year = labelled(year, label = "Year")) %>% 
   rename("country" = "iso3c")
 
+vtable::vtable(ingreso_dataset)
 
 # Success message!
 print(cat("\n\3 Cargado con éxito: dataset ingreso_dataset\n"))

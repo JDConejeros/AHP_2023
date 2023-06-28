@@ -24,7 +24,8 @@ lun 12/06
 
 ### 01-Dimensión de Daño por Alcohol
 
-- Pendiente de momento (durante el día).
+- Con el propósito de confeccionar una base de datos lo antes posible, la extracción se realizó de manera manual. Doy el detalle por variable:
+  - `deaths` corresponde a la primera variable: *cantidad de muertes atribuídas a *
 
 ### 02-Dimensión de Ingreso
 

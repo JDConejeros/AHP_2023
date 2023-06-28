@@ -13,6 +13,14 @@ apc_1 <- gho_data("SA_0000001688") # n = 237, 2000 2005 2010 2015 2019
 apc_2 <- gho_data("SA_0000001822") # n = 194 countries, 2018
 apc_3 <- gho_data("SA_0000001822_ARCHIVED") # n = 194 countries, 2010 2016
 
+apc_4 <- gho_data("SA_0000001688_ARCHIVED")
+
+apc_4$TimeDim %>% unique
+
+View(apc_1)
+
+summary(apc_1)
+summary(apc_2)
 # Omitted SA_0000001688_ARCHIVED
 
 # Join data
@@ -46,8 +54,9 @@ apc <- apc %>%
          apc_female = labelled(apc, label = "Total per capita (15+) consumption in females"))
 
 #Alternativa
-#apc <- read.csv("generacion_data/03-Consumo_OH/data/APC_data_view_Full_Data_data.csv")
+#apc <- read.csv("generacion_data/files/data/APC_data_view_Full_Data_data.csv")
 
+apc$Country %>% unique %>% length()
 # 11-rec_apc --------------------------------------------------------------
 
 # Import data
@@ -61,7 +70,7 @@ rec_apc <- rec_apc[,c(4,6,8,16)] %>%
   mutate(dim = recode(dim, 
                       "SA_TOTAL" = "",
                       "SA_BEER" = "_beer", 
-                      "SA_SPIRITS" = "_sprits",
+                      "SA_SPIRITS" = "_spirits",
                       "SA_WINE" = "_wine", 
                       "SA_OTHER_ALCOHOL" = "_other")) %>% 
   as_tibble
@@ -76,7 +85,7 @@ rec_apc <- rec_apc %>%
 # Labelled data
 rec_apc <- rec_apc %>% 
   mutate(rec_apc = labelled(rec_apc, label = "Recorded alcohol per capita consumption: Total"),
-         rec_apc_sprits = labelled(rec_apc_sprits, label = "Recorded alcohol per capita consumption: Sprits"),
+         rec_apc_sprits = labelled(rec_apc_spirits, label = "Recorded alcohol per capita consumption: Sprits"),
          rec_apc_wine = labelled(rec_apc_wine, label = "Recorded alcohol per capita consumption: Wine"),
          rec_apc_beer = labelled(rec_apc_beer, label = "Recorded alcohol per capita consumption: Beer"), 
          rec_apc_other = labelled(rec_apc_other, label = "Recorded alcohol per capita consumption: Other"))
@@ -492,5 +501,3 @@ cat("\n\3 Cargado con éxito: (data.frame)  consumo_dataset\n")
 
 # Print runtime
 end = Sys.time() - start ; print(end)
-
-rm(list = ls()[!(ls() %in% c("consumo_dataset", "ingreso_dataset"))]) ## Solución no elegante
