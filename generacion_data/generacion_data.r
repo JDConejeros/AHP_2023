@@ -1,23 +1,31 @@
 
-source("generacion_data/00-packages.r")
+source("generacion_data/files/00_packages.r")
 
-source("generacion_data/01-functions.r")
+source("generacion_data/files/01_functions.r")
 
 # Runtime: 2 sec max.
-source("generacion_data/files/dano_alcohol_dataset.r") %>% suppressWarnings
+source("generacion_data/files/02_D1_alcohol_harm_dataset.r") %>% suppressWarnings
 
 # Runtime: 1 min max.
-source("generacion_data/files/ingreso_dataset.r") %>% suppressWarnings
+source("generacion_data/files/03_D2_income_dataset.r") %>% suppressWarnings
 
 # Runtime: 1 sec max.
-source("generacion_data/files/consumo_dataset.r") %>% suppressWarnings
+source("generacion_data/files/04_D3_consumption_dataset.r") %>% suppressWarnings
 
-# source("generacion_data/04-Desigualdades/desigualdades-dataset.r")
+# Runtime: ??
+source("generacion_data/files/05_D4_inequalities_dataset.r")
 
-# source("generacion_data/05-Caracteristicas-poblacion/caracteristicas-poblacion-dataset.r")
+# Runtime: ??
+source("generacion_data/files/06_D5_population_characteristics_dataset.r")
 
-# source("generacion_data/06-Caracteristicas-ambientales/caracteristicas-ambientales-dataset.r")
+# Runtime: ??
+source("generacion_data/files/07_D6_environmental_characteristics_dataset.r")
 
+# Runtime: ??
+source("generacion_data/files/08_D7_risk_factors_dataset.r")
+
+# Runtime: ??
+source("generacion_data/files/09_D8_comorbidities_dataset.r")
 
 # Data merge --------------------------------------------------------------
 

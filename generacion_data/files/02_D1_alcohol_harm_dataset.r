@@ -1,10 +1,6 @@
 
 dano_oh <- read.csv("generacion_data/files/data/IHME-GBD_2019_DATA-ff885ce3-1/IHME-GBD_2019_DATA-ff885ce3-1.csv")  %>% tibble
 
-dano_oh %>% names %>% cbind
-
-dano_oh$measure_name %>% table
-
 # deaths ------------------------------------------------------------------
 
 deaths <- dano_oh %>% filter(measure_name == "Deaths")

@@ -24,7 +24,7 @@ indicator_data <- fromJSON(rawContent_indicators)$results
 # Get indicator data
 indicatorData_urlEndpoint <- "https://api.healthdata.org/sdg/v1/GetResultsByIndicator"
 
-queryString <- list(indicator_id = 1044) # expample indicator id
+queryString <- list(indicator_id = 1810) # expample indicator id
 
 r2 <- VERB("GET", indicatorData_urlEndpoint, 
           query = queryString,
@@ -34,7 +34,7 @@ r2 <- VERB("GET", indicatorData_urlEndpoint,
 rawContent_indicators <- content(r2, "text", encoding = "UTF-8")
 indicatorResults_data <- fromJSON(rawContent_indicators)$results
 
-View(indicatorResults_data)
+indicatorResults_data
 
 
 
