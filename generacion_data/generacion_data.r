@@ -9,7 +9,7 @@ source("generacion_data/files/02_D1_alcohol_harm_dataset.r") %>% suppressWarning
 # Runtime: 1 min max.
 source("generacion_data/files/03_D2_income_dataset.r") %>% suppressWarnings
 
-# Runtime: 1 sec max.
+# Runtime: 1 min max.
 source("generacion_data/files/04_D3_consumption_dataset.r") %>% suppressWarnings
 
 # Runtime: ??
