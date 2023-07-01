@@ -2,7 +2,13 @@
 # heq
 
 heq <- readRDS("generacion_data/files/data/V-Dem-CY-Core_R_v13/V-Dem-CY-Core-v13.rds") %>% tibble
-View(heq)
+head(heq)
+
+## Codebook
+
+heq %>% names %>% cbind
+
+heq[, c()]
 
 # gini
 
