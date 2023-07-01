@@ -139,3 +139,12 @@ lun 12/06
 
      - También disponibles para el año 2016 (actualizada, 194 países) y 2010 (archivada, 116 países).
  
+### 04-Dimensión "Desigualdades"
+
+- Esta se hizo de manera manual.
+  
+  14. `heq:` *Health Equality (Igualdad en Salud)*.
+  
+  - Igualdad en salud es una variable disponible en la base de datos del proyecto VDem, un proyecto de investigación centrado en el estudio global de la democracia. En concreto, la extracción se realizó de manera manual descargando los datos de la base *Country-Year: V-Dem Core version 13*. Esta base contiene 82 índices, con sus respectivos indicadores.
+  - Según el *[codebook](https://v-dem.net/documents/24/codebook_v13.pdf)* de la base, el índice **Health equality** (v2pehealth) está catalogado como un indicador de "Political Equalities", categoría que mide el poder que los miembros de diferentes grupos en la sciedad (también identificados como grupos políticos).   
+

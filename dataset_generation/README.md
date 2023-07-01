@@ -5,7 +5,7 @@
 
 - Ejecutar el archivo generacion_data.r para generar la data extraída hasta el momento.
 
-  - 🎯 Comentarios de la versión actual en: [Comentarios](Comentarios.md). 
+  - 🎯 Comentarios de la versión actual en: [notes](notes.md). 
 
 ## Tareas de la generación de la data
 
