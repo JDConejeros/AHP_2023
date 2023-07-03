@@ -21,7 +21,7 @@
   - [ ] Factores de Riesgo
   - [ ] Comorbilidades
   - [ ] Infraestructura y servicios públicos
-  - [ ] Políticas públicas
+  - [ ] Políticas públicas (especificación pendiente)
 - [ ] Tabla de missings por variable.
 - [ ] Investigación del proceso de extracción, origen, estimación y descripción de lo que mide cada variable. Especialmente, las variables de **Ingreso**.
 
