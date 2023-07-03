@@ -1,5 +1,5 @@
 
-dano_oh <- read.csv("generacion_data/files/data/IHME-GBD_2019_DATA-ff885ce3-1/IHME-GBD_2019_DATA-ff885ce3-1.csv")  %>% tibble
+dano_oh <- read.csv("files/data/IHME-GBD_2019_DATA-ff885ce3-1/IHME-GBD_2019_DATA-ff885ce3-1.csv")  %>% tibble
 
 # deaths ------------------------------------------------------------------
 

@@ -1,7 +1,7 @@
 
 # heq
 
-heq <- readRDS("generacion_data/files/data/V-Dem-CY-Core_R_v13/V-Dem-CY-Core-v13.rds") %>% tibble
+heq <- readRDS("dataset_generation/files/data/V-Dem-CY-Core_R_v13/V-Dem-CY-Core-v13.rds") %>% tibble
 head(heq)
 
 ## Codebook
