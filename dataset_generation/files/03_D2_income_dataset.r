@@ -57,7 +57,7 @@ gdp_per_capita <- gdp_per_capita %>%
 # Download link: https://thedocs.worldbank.org/en/doc/1ad246272dbbc437c74323719506aa0c-0350012021/related/Inflation-data.zip
 
 # Import data file
-hcpi <- read_dta("generacion_data/files/data/Inflation-data/hcpi_a.dta") %>% select(-c(59:64))
+hcpi <- read_dta("files/data/Inflation-data/hcpi_a.dta") %>% select(-c(59:64))
 
 # Convert to long data
 hcpi <- hcpi %>% 
