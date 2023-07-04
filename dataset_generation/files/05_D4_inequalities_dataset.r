@@ -51,10 +51,8 @@ gini <- gini %>%
 # Pendiente
 
 # Merge -------------------------------------------------------------------
-inequalities_dataset <- gini
-  # Parece que el problema es heq  
-  #   heq %>% 
-  # full_join(gini, by = c("iso3c", "year"))
+inequalities_dataset <- heq %>% 
+  full_join(gini, by = c("iso3c", "year"))
 
 
 # Lablled country data

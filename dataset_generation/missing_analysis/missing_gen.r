@@ -119,13 +119,13 @@ saveWorkbook(OUT, "dataset_generation/missing_analysis/missings_DIM2_income.xlsx
 
 # DIM3 Consumption --------------------------------------------------------
 
-startVariableIndex_dim2 <- 36
-endVariableIndex_dim2 <- 76
+startVariableIndex_dim3 <- 36
+endVariableIndex_dim3 <- 76
 
 lista <- list()
-variableNames <- names(ahp_data)[startVariableIndex_dim2:endVariableIndex_dim2]
+variableNames <- names(ahp_data)[startVariableIndex_dim3:endVariableIndex_dim3]
 
-for (i in startVariableIndex_dim2:endVariableIndex_dim2) {
+for (i in startVariableIndex_dim3:endVariableIndex_dim3) {
   lista[[i - 2]] <- ahp_data[, c("country", "year", names(ahp_data)[i])] %>%
     group_by(country, year) %>%
     summarise_all(function(x) { sum(is.na(x), na.rm = TRUE) }) %>%
@@ -143,5 +143,70 @@ for (i in variableNames) {
 }
 
 saveWorkbook(OUT, "dataset_generation/missing_analysis/missings_DIM3_consumption_dataset.xlsx", overwrite = TRUE)
+
+
+# DIM4-Inequalities -------------------------------------------------------
+
+ahp_data %>% names %>% cbind
+
+startVariableIndex_dim4 <- 77
+endVariableIndex_dim4 <- 78
+
+lista <- list()
+variableNames <- names(ahp_data)[startVariableIndex_dim4:endVariableIndex_dim4]
+
+for (i in startVariableIndex_dim4:endVariableIndex_dim4) {
+  lista[[i - 2]] <- ahp_data[, c("country", "year", names(ahp_data)[i])] %>%
+    group_by(country, year) %>%
+    summarise_all(function(x) { sum(is.na(x), na.rm = TRUE) }) %>%
+    pivot_wider(names_from = year, values_from = names(ahp_data)[i])
+}
+
+names(lista) <- variableNames
+
+OUT <- createWorkbook()
+
+for (i in variableNames) {
+  addWorksheet(OUT, i)
+  writeData(OUT, sheet = i, x = lista[[i]], startRow = 2, colNames = TRUE)
+  writeData(OUT, sheet = i, x = c("Country", "Year", names(ahp_data)[i]), startRow = 0, colNames = FALSE)
+}
+
+saveWorkbook(OUT, "dataset_generation/missing_analysis/missings_DIM4_inequalities.xlsx", overwrite = TRUE)
+
+
+# DIM5-Population ---------------------------------------------------------
+
+ahp_data %>% names %>% cbind
+
+startVariableIndex_dim5 <- 79
+endVariableIndex_dim5 <- 92
+
+lista <- list()
+variableNames <- names(ahp_data)[startVariableIndex_dim5:endVariableIndex_dim5]
+
+for (i in startVariableIndex_dim5:endVariableIndex_dim5) {
+  lista[[i - 2]] <- ahp_data[, c("country", "year", names(ahp_data)[i])] %>%
+    group_by(country, year) %>%
+    summarise_all(function(x) { sum(is.na(x), na.rm = TRUE) }) %>%
+    pivot_wider(names_from = year, values_from = names(ahp_data)[i])
+}
+
+names(lista) <- variableNames
+
+OUT <- createWorkbook()
+
+for (i in variableNames) {
+  addWorksheet(OUT, i)
+  writeData(OUT, sheet = i, x = lista[[i]], startRow = 2, colNames = TRUE)
+  writeData(OUT, sheet = i, x = c("Country", "Year", names(ahp_data)[i]), startRow = 0, colNames = FALSE)
+}
+
+saveWorkbook(OUT, "dataset_generation/missing_analysis/missings_DIM5_population_characteristics_dataset.xlsx", overwrite = TRUE)
+
+
+
+# DIM6-Enviroment ---------------------------------------------------------
+
 
 

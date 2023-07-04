@@ -36,8 +36,10 @@ source("dataset_generation/files/06_D5_population_characteristics_dataset.r") %>
 ahp_data <- alcohol_harm_dataset %>% 
   full_join(income_dataset, by = c("year", "country")) %>% 
   full_join(consumption_dataset, by = c("year", "country")) %>% 
-  full_join(inequalities_dataset, by = c("year", "country")) #%>% 
-  # full_join(population_characteristics_dataset, by = c("year", "country")) #%>% 
+  full_join(inequalities_dataset, by = c("year", "country"),
+            relationship = "many-to-many") %>% 
+  full_join(population_characteristics_dataset, by = c("year", "country"),
+            relationship = "many-to-many") #%>% 
   # full_join(environmental_characteristics_dataset, by = c("year", "country")) %>% 
   # full_join(risk_factors_dataset, by = c("year", "country")) %>% 
   # full_join(comorbidities_dataset, by = c("year", "country"))
