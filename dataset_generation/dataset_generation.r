@@ -54,5 +54,7 @@ write.csv(ahp_data, "dataset_generation/out/ahp_data.csv", row.names = FALSE)
 save(ahp_data, file = "dataset_generation/out/ahp_data.RData")
 
 
+# Missings analysis -------------------------------------------------------
 
-
+# Also, you can generate missings tables, with a general diagnosis, and missings by variable (year x country)
+source("dataset_generation/missing_analysis/missing_gen.r")
