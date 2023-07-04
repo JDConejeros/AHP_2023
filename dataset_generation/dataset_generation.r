@@ -1,33 +1,31 @@
 
-setwd("dataset_generation")
+source("dataset_generation/files/00_packages.r")
 
-source("files/00_packages.r")
-
-source("files/01_functions.r")
+source("dataset_generation/files/01_functions.r")
 
 # Runtime: 2 sec max.
-source("files/02_D1_alcohol_harm_dataset.r") %>% suppressWarnings
+source("dataset_generation/files/02_D1_alcohol_harm_dataset.r") %>% suppressWarnings
 
 # Runtime: 1 min max.
-source("files/03_D2_income_dataset.r") %>% suppressWarnings
+source("dataset_generation/files/03_D2_income_dataset.r") %>% suppressWarnings
 
 # Runtime: 1 min max.
-source("files/04_D3_consumption_dataset.r") %>% suppressWarnings
+source("dataset_generation/files/04_D3_consumption_dataset.r") %>% suppressWarnings
 
 # Runtime: 15 secs
-source("files/05_D4_inequalities_dataset.r") %>% suppressWarnings
+source("dataset_generation/files/05_D4_inequalities_dataset.r") %>% suppressWarnings
 
 # Runtime: ??
-source("files/06_D5_population_characteristics_dataset.r")
+source("dataset_generation/files/06_D5_population_characteristics_dataset.r")
 
 # Runtime: ??
-source("files/07_D6_environmental_characteristics_dataset.r")
+source("dataset_generation/files/07_D6_environmental_characteristics_dataset.r")
 
 # Runtime: ??
-source("files/08_D7_risk_factors_dataset.r")
+source("dataset_generation/files/08_D7_risk_factors_dataset.r")
 
 # Runtime: ??
-source("files/09_D8_comorbidities_dataset.r")
+source("dataset_generation/files/09_D8_comorbidities_dataset.r")
 
 # Data merge --------------------------------------------------------------
 
