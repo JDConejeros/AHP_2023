@@ -15,8 +15,8 @@
   - [x] Daño por alcohol (durante el día)
   - [x] Ingreso
   - [x] Consumo OH
-  - [x] Desigualdades
-  - [x] Características de la población
+  - [-] Desigualdades (2 variables)
+  - [-] Características de la población (2 variables)
   - [ ] Características ambientales
   - [ ] Factores de Riesgo
   - [ ] Comorbilidades

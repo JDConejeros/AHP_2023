@@ -5,9 +5,7 @@ start = Sys.time()
 
 # 24-heq ------------------------------------------------------------------
 
-heq <- readRDS("files/data/V-Dem-CY-Core_R_v13/V-Dem-CY-Core-v13.rds") %>% tibble
-
-heq[str_detect(heq$country_name, "^A"),] %>% group_by(project) %>% count(country_text_id)
+heq <- readRDS("dataset_generation/files/data/V-Dem-CY-Core_R_v13/V-Dem-CY-Core-v13.rds") %>% tibble
 
 # Codebook: https://v-dem.net/documents/24/codebook_v13.pdf
 
@@ -28,13 +26,6 @@ heq <- heq %>%
 heq <- heq %>% 
   mutate(heq = labelled(heq, label = "Health Equality (V-Dem v13)"))
 
-heq %>% 
-  filter(iso3c == "PSE") %>%
-  count(year)
-
-countrycode("PSE", origin = "iso3c", destination = "country.name")
-
-
 # 25-gini -----------------------------------------------------------------
 gini <- WDI(indicator = "SI.POV.GINI")
 
@@ -51,7 +42,7 @@ gini <- gini %>%
   filter(!is.na(iso3c))
 
 # Labelled variable
-# gini <- gini %>% 
+gini <- gini %>% 
   mutate(gini = labelled(gini, label = "Gini Index"))
 
 
@@ -61,11 +52,9 @@ gini <- gini %>%
 
 # Merge -------------------------------------------------------------------
 inequalities_dataset <- gini
-    
+  # Parece que el problema es heq  
   #   heq %>% 
   # full_join(gini, by = c("iso3c", "year"))
-
-inequalities_dataset %>% group_by(year) %>% count(iso3c) %>% View
 
 
 # Lablled country data
@@ -79,12 +68,13 @@ inequalities_dataset <- inequalities_dataset %>%
          year = labelled(year, label = "Year")) %>% 
   rename("country" = "iso3c")
 
-vtable::vtable(inequalities_dataset)
-
 # Success message!
-print(cat("\n\3 Cargado con éxito: dataset inequalities_dataset\n"))
+cat("\n\21 (DIM4) dataset inequalities_dataset -- successfully loaded\n\n")
 
+# Print runtime
 end = Sys.time() - start ; print(end)
 
-
+# Remove objects
+rm(list = ls()[!ls() %in% c("alcohol_harm_dataset", "income_dataset", "consumption_dataset",
+                            "inequalities_dataset")])
 

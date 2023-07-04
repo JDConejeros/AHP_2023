@@ -463,7 +463,7 @@ ahu_12m <- ahu_12m %>%
 
 # Merge -------------------------------------------------------------------
 
-consumo_dataset <- apc %>% 
+consumption_dataset <- apc %>% 
   full_join(rec_apc, by = c("iso3c", "year")) %>% 
   full_join(unrec_apc, by = c("iso3c", "year")) %>% 
   full_join(tourist, by = c("iso3c", "year"))  %>% 
@@ -480,7 +480,7 @@ consumo_dataset <- apc %>%
 
 
 # iso3c --> country
-consumo_dataset <- consumo_dataset %>% 
+consumption_dataset <- consumption_dataset %>% 
   mutate(iso3c = labelled(iso3c, 
                           labels = setNames(unique(iso3c), 
                                             countrycode(unique(iso3c),
@@ -491,7 +491,12 @@ consumo_dataset <- consumo_dataset %>%
   rename("country" = "iso3c")
 
 # Success message!
-cat("\n\3 Cargado con éxito: (data.frame)  consumo_dataset\n")
+cat("\n\21 consumption_dataset -- successfully loaded\n\n")
 
 # Print runtime
 end = Sys.time() - start ; print(end)
+
+
+# Remove objects
+rm(list = ls()[!ls() %in% c("alcohol_harm_dataset", "income_dataset", "consumption_dataset")])
+

@@ -1,5 +1,8 @@
+#!/usr/bin/Rscript
 
-dano_oh <- read.csv("files/data/IHME-GBD_2019_DATA-ff885ce3-1/IHME-GBD_2019_DATA-ff885ce3-1.csv")  %>% tibble
+start = Sys.time()
+
+dano_oh <- read.csv("dataset_generation/files/data/IHME-GBD_2019_DATA-ff885ce3-1/IHME-GBD_2019_DATA-ff885ce3-1.csv")  %>% tibble
 
 # deaths ------------------------------------------------------------------
 
@@ -101,13 +104,13 @@ incidence <- incidence %>%
 
 # unir base de datos
 
-dano_alcohol_dataset <- deaths %>% 
+alcohol_harm_dataset <- deaths %>% 
   full_join(prevalence, by = c("iso3c", "year")) %>% 
   full_join(incidence, by = c("iso3c", "year")) 
   
 
 ## Revisar esto
-dano_alcohol_dataset <- dano_alcohol_dataset %>% 
+alcohol_harm_dataset <- alcohol_harm_dataset %>% 
   mutate(iso3c = labelled(iso3c, 
                           labels = setNames(unique(iso3c), 
                                             countrycode(unique(iso3c),
@@ -118,7 +121,10 @@ dano_alcohol_dataset <- dano_alcohol_dataset %>%
   rename("country" = "iso3c")
 
 # Success message!
-cat("\n\3 Cargado con éxito: (data.frame)  dano_alcohol_dataset\n")
+cat("\n\21 (DIM1) alcohol_harm_dataset -- successfully loaded\n\n")
 
 # Print runtime
 end = Sys.time() - start ; print(end)
+
+# Remove objects
+rm(list = ls()[ls() != "alcohol_harm_dataset"])

@@ -2,11 +2,6 @@
 
 start = Sys.time()
 
-# Pendientes:
-# ¿Podemos automatizar la limpiezade la data de World Bank con map o map_df? Sí, pero empecemos a mano primero
-# EL procedimiento para asignar código iso3 es el de transformar diréctamente del nombre completo de los países y no confiar en el iso3 por defecto de los datasets.
-# Falta un sistema (función) para demostrar que el etiquetado por iso3c se hizo correctamente.
-
 # 6-gdp -------------------------------------------------------------------
 
 # Import data
@@ -57,7 +52,7 @@ gdp_per_capita <- gdp_per_capita %>%
 # Download link: https://thedocs.worldbank.org/en/doc/1ad246272dbbc437c74323719506aa0c-0350012021/related/Inflation-data.zip
 
 # Import data file
-hcpi <- read_dta("files/data/Inflation-data/hcpi_a.dta") %>% select(-c(59:64))
+hcpi <- read_dta("dataset_generation/files/data/Inflation-data/hcpi_a.dta") %>% select(-c(59:64))
 
 # Convert to long data
 hcpi <- hcpi %>% 
@@ -156,7 +151,7 @@ gdp_real_per_capita <- gdp_real_per_capita %>%
 
 # Merge -------------------------------------------------------------------
 
-ingreso_dataset <- gdp %>% 
+income_dataset <- gdp %>% 
   full_join(gdp_per_capita, by = c("iso3c", "year")) %>% 
   full_join(hcpi, by = c("iso3c", "year")) %>% 
   full_join(cpi, by = c("iso3c", "year")) %>% 
@@ -165,7 +160,7 @@ ingreso_dataset <- gdp %>%
 
 
 # Lablled country data
-ingreso_dataset <- ingreso_dataset %>% 
+income_dataset <- income_dataset %>% 
   mutate(iso3c = labelled(iso3c, 
                           labels = setNames(unique(iso3c), 
                                             countrycode(unique(iso3c),
@@ -175,10 +170,11 @@ ingreso_dataset <- ingreso_dataset %>%
          year = labelled(year, label = "Year")) %>% 
   rename("country" = "iso3c")
 
-vtable::vtable(ingreso_dataset)
-
 # Success message!
-print(cat("\n\3 Cargado con éxito: dataset ingreso_dataset\n"))
+cat("\n\21 (DIM2) dataset income_dataset -- successfully loaded\n\n\n")
 
+# Print runtime
 end = Sys.time() - start ; print(end)
 
+# Remove objects
+rm(list = ls()[!ls() %in% c("alcohol_harm_dataset", "income_dataset")])

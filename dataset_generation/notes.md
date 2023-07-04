@@ -16,7 +16,11 @@ lun 12/06
 
 ## Comentarios particulares por dimensión
 
-### Variables faltantes por dimensión
+### 01- Daño por alcohol
+
+La descarga de los datos de la primera dimensión "Daño por alcohol" se hizo por medio de descarga manual de la base de datos, disponible en la [herramienta de visualización de datos de GLobal Burden of Disease](https://vizhub.healthdata.org/gbd-results/).
+
+1. `deaths` ** `manual`
 
 - **Daño por alcohol:** Todavía pendiente, pero estará en proceso de extracción durante el día.
 - **Ingreso:** GDP real. No encontrado como tal en la data.
