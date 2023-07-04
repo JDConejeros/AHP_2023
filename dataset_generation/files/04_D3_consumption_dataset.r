@@ -15,12 +15,6 @@ apc_3 <- gho_data("SA_0000001822_ARCHIVED") # n = 194 countries, 2010 2016
 
 apc_4 <- gho_data("SA_0000001688_ARCHIVED")
 
-apc_4$TimeDim %>% unique
-
-View(apc_1)
-
-summary(apc_1)
-summary(apc_2)
 # Omitted SA_0000001688_ARCHIVED
 
 # Join data

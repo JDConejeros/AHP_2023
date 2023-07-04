@@ -7,6 +7,8 @@ start = Sys.time()
 
 heq <- readRDS("files/data/V-Dem-CY-Core_R_v13/V-Dem-CY-Core-v13.rds") %>% tibble
 
+heq[str_detect(heq$country_name, "^A"),] %>% group_by(project) %>% count(country_text_id)
+
 # Codebook: https://v-dem.net/documents/24/codebook_v13.pdf
 
 # select variables
@@ -26,6 +28,13 @@ heq <- heq %>%
 heq <- heq %>% 
   mutate(heq = labelled(heq, label = "Health Equality (V-Dem v13)"))
 
+heq %>% 
+  filter(iso3c == "PSE") %>%
+  count(year)
+
+countrycode("PSE", origin = "iso3c", destination = "country.name")
+
+
 # 25-gini -----------------------------------------------------------------
 gini <- WDI(indicator = "SI.POV.GINI")
 
@@ -42,7 +51,7 @@ gini <- gini %>%
   filter(!is.na(iso3c))
 
 # Labelled variable
-gini <- gini %>% 
+# gini <- gini %>% 
   mutate(gini = labelled(gini, label = "Gini Index"))
 
 
@@ -51,8 +60,10 @@ gini <- gini %>%
 # Pendiente
 
 # Merge -------------------------------------------------------------------
-inequalities_dataset <- heq %>% 
-  full_join(gini, by = c("iso3c", "year"))
+inequalities_dataset <- gini
+    
+  #   heq %>% 
+  # full_join(gini, by = c("iso3c", "year"))
 
 inequalities_dataset %>% group_by(year) %>% count(iso3c) %>% View
 
