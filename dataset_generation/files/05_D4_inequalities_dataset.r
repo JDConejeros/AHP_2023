@@ -46,8 +46,6 @@ gini <- gini %>%
 gini <- gini %>%
   mutate(gini = labelled(gini, label = "Gini Index"))
 
-globalSummary(gini, country_name = "iso3c")
-
 # 26-income_inequality ----------------------------------------------------
 
 # Pendiente
