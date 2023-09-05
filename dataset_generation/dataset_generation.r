@@ -32,8 +32,8 @@ source("dataset_generation/files/08_D7_risk_factors_dataset.r") %>% suppressWarn
 source("dataset_generation/files/09_D8_comorbidities_dataset.r") %>% suppressWarnings
 
 # # Runtime: 11 seconds
-# source("dataset_generation/files/10_D9_infrastructure_dataset.r") %>% suppressWarnings
-# 
+source("dataset_generation/files/10_D9_infrastructure_dataset.r") %>% suppressWarnings
+
 # # Runtime: 11 seconds
 # source("dataset_generation/files/11_D10_public_policy_dataset.r") %>% suppressWarnings
 
