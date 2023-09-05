@@ -136,6 +136,7 @@ gdp_real_per_capita <- fread("dataset_generation/files/data/gdp-per-capita-world
 gdp_real_per_capita <- gdp_real_per_capita[,c(1, 3, 4)] %>% 
   setNames(c("country", "year", "gdp_real_per_capita"))
 
+
 # iso3c code asignation
 gdp_real_per_capita <- gdp_real_per_capita %>% 
   mutate(iso3c = countrycode(country, origin = 'country.name', destination = 'iso3c')) %>% 
