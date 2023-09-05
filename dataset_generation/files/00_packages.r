@@ -1,7 +1,16 @@
 
 # Data handling
-pacman::p_load(janitor, countrycode, foreign, tidyverse,
-               WDI, owidR, ghost,
+pacman::p_load(janitor, 
+               countrycode, 
+               foreign,
+               tidyverse,
                haven,
-               openxlsx)
+               openxlsx,
+               data.table,
+               httr,
+               jsonlite,
+               WDI,
+               owidR, 
+               ghost,
+               rnoaa)
 
