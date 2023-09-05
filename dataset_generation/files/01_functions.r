@@ -1,18 +1,56 @@
+#!/usr/bin/Rscript
 
-## Quizás no se anecesario tener este apartado
-
-# Función
-is.serie <- function(serie) {
+# Function to provide global summary of time series data
+# data: the input data frame containing time series information
+# year_name: the name of the column representing years in the data frame (default is "year")
+# country_name: the name of the column representing countries in the data frame (default is "country")
+globalSummary <- function(data, year_name = "year", country_name = "country") {
   
-  condicion_verificada <- any(sort(unique(serie)) == (1:length(unique(serie)) + min(serie) - 1))
+  years <- data[[year_name]]
+  countries <- data[[country_name]]
   
-  if (length(unique(serie)) == length(min(serie):max(serie))) {
-    return(paste0("Serie sin discontinuidades: ", min(serie), "-", max(serie)))
+  min_year <- min(years)
+  max_year <- max(years)
+  sorted_vector <- sort(unique(years))
+  
+  years_count <- length(unique(years))
+  countries_count <- length(unique(countries))
+  
+  # Check if the years are continuous or discontinuous
+  if (length(sorted_vector) == (max_year - min_year + 1)) {
+    cat("Continuous series:", min_year, "-", max_year, "\n")
   } else {
-    return("Hay discontinuidades") # Sería genial desarrollar un bucle for que vaya detectando las discontinuidades y arme el string de las secuencias...
+    cat("Discontinuous series:")
+    start <- sorted_vector[1]
+    end <- start
+    
+    for (i in 2:length(sorted_vector)) {
+      if (sorted_vector[i] == end + 1) {
+        end <- sorted_vector[i]
+      } else {
+        cat(" ", start, "-", end, ",")
+        start <- sorted_vector[i]
+        end <- start
+      }
+    }
+    
+    cat(" ", start, "-", max_year, "\n")
   }
+  cat("\n", years_count, " points in time.")
+  cat("\n", countries_count, " countries.")
 }
 
+## Message:
+# Print a message indicating that the globalSummary function is available
+print("globalSummary function available")
+
+
+# na_count: a function to count na values:
+na_count <- function(x, rounded = 2){return(round(sum(is.na(x))/length(x), 2))}
+
+## Message:
+# Print a message indicating that na_count function is available
+print("na_count function available")
 
 # Dataset names values
 dataset_names <- c("dataset_names", "na_count", "globalSummary",
