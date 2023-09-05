@@ -14,7 +14,7 @@ gdp <- gdp[,c(1,4,5)] %>% setNames(c("country", "year", "gdp"))
 gdp <- gdp %>% 
   mutate(iso3c = countrycode(country, origin = 'country.name', destination = 'iso3c')) %>% 
   relocate(ncol(.), 1:(ncol(.)-1)) %>% 
-  select(-country) %>% 
+  select(-country) %>%
   as_tibble %>% 
   filter(!is.na(iso3c))
 
@@ -52,7 +52,7 @@ gdp_per_capita <- gdp_per_capita %>%
 # Download link: https://thedocs.worldbank.org/en/doc/1ad246272dbbc437c74323719506aa0c-0350012021/related/Inflation-data.zip
 
 # Import data file
-hcpi <- read_dta("dataset_generation/files/data/Inflation-data/hcpi_a.dta") %>% select(-c(59:64))
+hcpi <- as.data.table(read_dta("dataset_generation/files/data/Inflation-data/hcpi_a.dta") %>% select(-c(59:64)))
 
 # Convert to long data
 hcpi <- hcpi %>% 
@@ -100,7 +100,7 @@ cpi <- cpi %>%
   mutate(cpi = as.numeric(cpi),
          cpi = labelled(cpi, label = "Inflation, consumer prices (annual %)"))
 
-# 10-deflacor -------------------------------------------------------------
+# 10-deflator -------------------------------------------------------------
 
 # Deflator import database
 deflator <- WDI(indicator = "NY.GDP.DEFL.KD.ZG")
@@ -121,14 +121,16 @@ deflator <- deflator %>%
   mutate(deflator = as.numeric(deflator),
          deflator = labelled(deflator, label = "GDP deflator (annual %)"))
 
-# 11-gdp_real -------------------------------------------------------------
+# R-gdp_real -------------------------------------------------------------
 
-## PENDIENTE ----
+## RETIRADO ----
 
-# 12-gdp_real_per_capita --------------------------------------------------
+# 11-gdp_real_per_capita --------------------------------------------------
 
 # Query OWID API using the owidR package
-gdp_real_per_capita <- owid(chart_id = "gdp-per-capita-worldbank")
+# API: gdp_real_per_capita <- owid(chart_id = "gdp-per-capita-worldbank")
+
+gdp_real_per_capita <- fread("dataset_generation/files/data/gdp-per-capita-worldbank.csv")
 
 # Extracting and rename variables of interest
 gdp_real_per_capita <- gdp_real_per_capita[,c(1, 3, 4)] %>% 
@@ -147,10 +149,9 @@ gdp_real_per_capita <- gdp_real_per_capita %>%
   mutate(gdp_real_per_capita = as.numeric(gdp_real_per_capita),
          gdp_real_per_capita = labelled(gdp_real_per_capita, label = "Real GDP per capita (adjusted for inflation and differences in cost of living)"))
 
-
-
 # Merge -------------------------------------------------------------------
 
+# Joining all variables into a dataset of the dimension
 income_dataset <- gdp %>% 
   full_join(gdp_per_capita, by = c("iso3c", "year")) %>% 
   full_join(hcpi, by = c("iso3c", "year")) %>% 
@@ -159,22 +160,25 @@ income_dataset <- gdp %>%
   full_join(gdp_real_per_capita, by = c("iso3c", "year"))
 
 
-# Lablled country data
+# Adding the country names and reorganizing variables
 income_dataset <- income_dataset %>% 
+  mutate(country = countrycode(iso3c, origin = "iso3c", destination = "country.name")) %>%
   mutate(iso3c = labelled(iso3c, 
                           labels = setNames(unique(iso3c), 
                                             countrycode(unique(iso3c),
                                                         origin = 'iso3c',
                                                         destination = 'country.name')),
                           label = "Country iso3c code"),
-         year = labelled(year, label = "Year")) %>% 
-  rename("country" = "iso3c")
+         year = labelled(year, label = "Year")) %>%
+  relocate(ncol(.))
 
-# Success message!
-cat("\n\21 (DIM2) dataset income_dataset -- successfully loaded\n\n\n")
+# Success message: dataset loaded
+cat("\n\21 (DIM2) income_dataset (data.frame) -- successfully loaded\n\n")
 
 # Print runtime
 end = Sys.time() - start ; print(end)
 
-# Remove objects
-rm(list = ls()[!ls() %in% c("alcohol_harm_dataset", "income_dataset")])
+# Remove objects from the workspace
+rm(list = ls()[!ls() %in% dataset_names])
+gc()
+

@@ -23,7 +23,8 @@ apc <- apc_1 %>%
   full_join(filter(apc_3, TimeDim != 2010), by = names(.)) ; rm(apc_1, apc_2, apc_3)
 
 # Rename variables and prepare categories
-apc <- apc[,c(4,6,8,16)] %>% 
+apc <- filter(apc, SpatialDimType == "COUNTRY") %>% 
+  select(4,6,8,16) %>% 
   setNames(c("iso3c", "year", "dim", "apc")) %>% 
   mutate(dim = recode(dim, "BTSX" = "", "MLE" = "_male", "FMLE" = "_female"))
 
@@ -50,16 +51,14 @@ apc <- apc %>%
 #Alternativa
 #apc <- read.csv("generacion_data/files/data/APC_data_view_Full_Data_data.csv")
 
-apc$Country %>% unique %>% length()
 # 11-rec_apc --------------------------------------------------------------
 
 # Import data
 rec_apc <- gho_data("SA_0000001400") 
 
-rec_apc$SpatialDim %>% unique %>% length
-
 # Select and fix variables
-rec_apc <- rec_apc[,c(4,6,8,16)] %>% 
+rec_apc <- filter(rec_apc, SpatialDimType == "COUNTRY") %>% 
+  select(4,6,8,16) %>% 
   setNames(c("iso3c", "year", "dim", "rec_apc")) %>% 
   mutate(dim = recode(dim, 
                       "SA_TOTAL" = "",
@@ -85,12 +84,16 @@ rec_apc <- rec_apc %>%
          rec_apc_other = labelled(rec_apc_other, label = "Recorded alcohol per capita consumption: Other"))
 
 
+
 # 12-unrec_apc ------------------------------------------------------------
 
 # Import data
 unrec_apc_1 <- gho_data("SA_0000001406") # 2010 2005 2015
 unrec_apc_2 <- gho_data("SA_0000001821") # 2019
-unrec_apc_3 <- gho_data("SA_0000001821_ARCHIVED") # 2016 2010
+unrec_apc_3 <- gho_data("SA_0000001821_ARCHIVED") %>% filter(!Id %in% c(22385153,
+                                                                        22385154,
+                                                                        22385323,
+                                                                        22385346)) # 2016 2010
 
 ## n = 193 countries (each one)
 
@@ -102,7 +105,8 @@ unrec_apc <- unrec_apc_1 %>%
   full_join(unrec_apc_3, by = names(.)) ; rm(unrec_apc_1, unrec_apc_2, unrec_apc_3)
 
 # Extract and rename variables of interest
-unrec_apc <- unrec_apc[,c(4,6,16)] %>% 
+unrec_apc <- filter(unrec_apc, SpatialDimType == "COUNTRY" & !Id %in% c(4945420, 4945421)) %>% 
+  select(4,6,16) %>% 
   setNames(c("iso3c", "year", "unrec_apc"))
 
 # Labelled variables
@@ -126,7 +130,16 @@ tourist <- tourist_1 %>%
   full_join(filter(tourist_3, TimeDim!=2010), by = names(.)) ; rm(tourist_1, tourist_2, tourist_3)
 
 # Extract and rename variables of interest
-tourist <- tourist[,c(4,6,16)] %>% 
+tourist <- filter(tourist, SpatialDimType == "COUNTRY" & 
+                    !Id %in% c(7570511,
+                               7570512,
+                               7570520,                           
+                               7570558,                            
+                               7570629,                            
+                               7570630,
+                               7570637, 
+                               7570644)) %>% 
+  select(4,6,16) %>% 
   setNames(c("iso3c", "year", "tourist"))
 
 # Labelled variables
@@ -136,21 +149,20 @@ tourist <- tourist %>%
 
 # 14-drinkers -------------------------------------------------------------
 
-## Suspendida temporalmente
-
 # Import data
-drinkers_1 <- gho_data("SA_0000001404") # 2016, 3 cat, n = 191
-drinkers_2 <- gho_data("SA_0000001404_ARCHIVED") # 2005, 2010, 3 cat, n = 193
+drinkers_1 <- gho_data("SA_0000001404") %>% select(-c(Id, Date, Comments))# 2016, 3 cat, n = 191
+drinkers_2 <- gho_data("SA_0000001404_ARCHIVED") %>% select(-c(Id, Date, Comments)) # 2005, 2010, 3 cat, n = 193
 
-## Por algún motivo, están duplicados algunas observaciones de drinkers2.
-# drinkers_2 %>% group_by(SpatialDim, Dim1) %>% count(TimeDim) %>% View()
+drinkers_2 <- drinkers_2 %>% unique()
 
 # Join data
 drinkers <- drinkers_1 %>%
   full_join(drinkers_2, by = names(.)) ; rm(drinkers_1, drinkers_2)
 
+
 # Rename variables and prepare categories
-drinkers <- drinkers[,c(4,6,8,16)] %>%
+drinkers <- filter(drinkers, SpatialDimType == "COUNTRY") %>% 
+  select(3,5,7,15) %>%
   setNames(c("iso3c", "year", "dim", "drinkers")) %>%
   mutate(dim = recode(dim, "BTSX" = "", "MLE" = "_male", "FMLE" = "_female"))
 
@@ -158,8 +170,7 @@ drinkers <- drinkers[,c(4,6,8,16)] %>%
 drinkers <- drinkers %>%
   pivot_wider(names_from = dim,
               values_from = drinkers,
-              names_prefix = "drinkers",
-              values_fn = {mean}) %>% # Cambiar esto
+              names_prefix = "drinkers") %>% 
   relocate(c(1, 2:4, 5))
 
 # Labelled variables
@@ -172,8 +183,10 @@ drinkers <- drinkers %>%
 # 15-abstainers -----------------------------------------------------------
 
 # Import data
-abstainers_1 <- gho_data("SA_0000001409")
-abstainers_2 <- gho_data("SA_0000001409_ARCHIVED")
+abstainers_1 <- gho_data("SA_0000001409") %>% select(-c(Id, Date, Comments))
+abstainers_2 <- gho_data("SA_0000001409_ARCHIVED") %>% select(-c(Id, Date, Comments))
+
+abstainers_2 <- abstainers_2 %>% unique
 
 ## Omitted "SA_0000001409_ARCHIVED" n = 97 countries
 
@@ -182,7 +195,8 @@ abstainers <- abstainers_1 %>%
   full_join(abstainers_2, by = names(.)) ; rm(abstainers_1, abstainers_2)
 
 # Rename variables and prepare categories
-abstainers <- abstainers[,c(4,6,8,15)] %>%
+abstainers <- filter(abstainers, SpatialDimType == "COUNTRY") %>% 
+  select(3,5,7,14) %>%
   setNames(c("iso3c", "year", "dim", "abstainers")) %>%
   mutate(dim = recode(dim, "BTSX" = "", "MLE" = "_male", "FMLE" = "_female"),
          abstainers = as.numeric(abstainers))
@@ -195,8 +209,7 @@ abstainers <- abstainers %>%
 abstainers <- abstainers %>%
   pivot_wider(names_from = dim,
               values_from = abstainers,
-              names_prefix = "abstainers",
-              values_fn = {mean}) %>% # Cambiar esto ------
+              names_prefix = "abstainers") %>% 
   relocate(c(1, 2:4, 5))
 
 # Labelled variables
@@ -209,31 +222,31 @@ abstainers <- abstainers %>%
 # 16-absteiners_12m -------------------------------------------------------
 
 # Import data
-abstainers_12m_1 <- gho_data("SA_0000001411")
-abstainers_12m_2 <- gho_data("SA_0000001411_ARCHIVED")
+abstainers_12month_1 <- gho_data("SA_0000001411")
+abstainers_12month_2 <- gho_data("SA_0000001411_ARCHIVED")
 
 # Join data
-abstainers_12m <- abstainers_12m_1 %>% 
-  full_join(abstainers_12m_1, by = names(.)) ; rm(abstainers_12m_1, abstainers_12m_1)
+abstainers_12month <- abstainers_12month_1 %>% 
+  full_join(abstainers_12month_1, by = names(.)) ; rm(abstainers_12month_1, abstainers_12month_2)
 
 # Rename variables and prepare categories
-abstainers_12m <- abstainers_12m[,c(4,6,8,16)] %>% 
-  setNames(c("iso3c", "year", "dim", "abstainers_12m")) %>% 
+abstainers_12month <- filter(abstainers_12month, SpatialDimType == "COUNTRY") %>% 
+  select(4,6,8,16) %>% 
+  setNames(c("iso3c", "year", "dim", "abstainers_12month")) %>% 
   mutate(dim = recode(dim, "BTSX" = "", "MLE" = "_male", "FMLE" = "_female"))
 
 # Generar una columna para hombres y mujeres, según su categoría
-abstainers_12m <- abstainers_12m %>%
+abstainers_12month <- abstainers_12month %>%
   pivot_wider(names_from = dim,
-              values_from = abstainers_12m,
-              names_prefix = "abstainers_12m") %>% 
+              values_from = abstainers_12month,
+              names_prefix = "abstainers_12month") %>% 
   relocate(c(1, 2:4, 5))
 
 # Labelled variables
-abstainers_12m <- abstainers_12m %>% 
-  mutate(abstainers_12m = labelled(abstainers_12m, label = "Abstainers past 12 months (%)"),
-         abstainers_12m_male = labelled(abstainers_12m_male, label = "Abstainers past 12 months (%): males"),
-         abstainers_12m_female = labelled(abstainers_12m_female, label = "Abstainers past 12 months (%): females"))
-
+abstainers_12month <- abstainers_12month %>% 
+  mutate(abstainers_12month = labelled(abstainers_12month, label = "Abstainers past 12 months (%)"),
+         abstainers_12month_male = labelled(abstainers_12month_male, label = "Abstainers past 12 months (%): males"),
+         abstainers_12month_female = labelled(abstainers_12month_female, label = "Abstainers past 12 months (%): females"))
 
 # 17-former_drinkers ------------------------------------------------------
 
@@ -256,7 +269,8 @@ former_drinkers <- former_drinkers_1 %>%
   full_join(former_drinkers_2, by = names(.)) ; rm(former_drinkers_1, former_drinkers_2)
 
 # Rename variables and prepare categories
-former_drinkers <- former_drinkers[,c(4,6,8,15)] %>% 
+former_drinkers <- filter(former_drinkers, SpatialDimType == "COUNTRY") %>% 
+  select(4,6,8,15) %>% 
   setNames(c("iso3c", "year", "dim", "former_drinkers")) %>% 
   mutate(dim = recode(dim, "BTSX" = "", "MLE" = "_male", "FMLE" = "_female"))
 
@@ -273,33 +287,36 @@ former_drinkers <- former_drinkers %>%
          former_drinkers_male = labelled(former_drinkers_male, label = "Former drinkers (%): males"),
          former_drinkers_female = labelled(former_drinkers_female, label = "Former drinkers (%): females"))
 
-# 18-consumers_12m --------------------------------------------------------
+
+# 18-consumers_12month --------------------------------------------------------
 
 # Import data
-consumers_12m_1 <- gho_data("SA_0000001413")
-consumers_12m_2 <- gho_data("SA_0000001413_ARCHIVED")
+consumers_12month_1 <- gho_data("SA_0000001413")
+consumers_12month_2 <- gho_data("SA_0000001413_ARCHIVED")
 
 # Join data
-consumers_12m <- consumers_12m_1 %>% 
-  full_join(consumers_12m_2, by = names(.)) ; rm(consumers_12m_1, consumers_12m_2)
+consumers_12month <- consumers_12month_1 %>% 
+  full_join(consumers_12month_2, by = names(.)) ; rm(consumers_12month_1, consumers_12month_2)
 
 # Rename variables and prepare categories
-consumers_12m <- consumers_12m[,c(4,6,8,15)] %>% 
-  setNames(c("iso3c", "year", "dim", "consumers_12m")) %>% 
+consumers_12month <- filter(consumers_12month, SpatialDimType == "COUNTRY") %>% 
+  select(4,6,8,15) %>% 
+  setNames(c("iso3c", "year", "dim", "consumers_12month")) %>% 
   mutate(dim = recode(dim, "BTSX" = "", "MLE" = "_male", "FMLE" = "_female"))
 
 # Generar una columna para hombres y mujeres, según su categoría
-consumers_12m <- consumers_12m %>%
+consumers_12month <- consumers_12month %>%
   pivot_wider(names_from = dim,
-              values_from = consumers_12m,
-              names_prefix = "consumers_12m") %>% 
+              values_from = consumers_12month,
+              names_prefix = "consumers_12month") %>% 
   relocate(c(1, 2:4, 5))
 
 # Labelled variables
-consumers_12m <- consumers_12m %>% 
-  mutate(consumers_12m = labelled(consumers_12m, label = "Alcohol consumers past 12 months (%)"),
-         consumers_12m_male = labelled(consumers_12m_male, label = "Alcohol consumers past 12 months (%): males"),
-         consumers_12m_female = labelled(consumers_12m_female, label = "Alcohol consumers past 12 months (%): females"))
+consumers_12month <- consumers_12month %>% 
+  mutate(consumers_12month = labelled(consumers_12month, label = "Alcohol consumers past 12 months (%)"),
+         consumers_12month_male = labelled(consumers_12month_male, label = "Alcohol consumers past 12 months (%): males"),
+         consumers_12month_female = labelled(consumers_12month_female, label = "Alcohol consumers past 12 months (%): females"))
+
 
 # 19-hed ------------------------------------------------------------------
 
@@ -312,7 +329,8 @@ hed <- hed_1 %>%
   full_join(hed_2, by = names(.)) ; rm(hed_1, hed_2)
 
 # Rename variables and prepare categories
-hed <- hed[,c(4,6,8,16)] %>% 
+hed <- filter(hed, SpatialDimType == "COUNTRY") %>% 
+  select(4,6,8,16) %>% 
   setNames(c("iso3c", "year", "dim", "hed")) %>% 
   mutate(dim = recode(dim, "BTSX" = "", "MLE" = "_male", "FMLE" = "_female"))
 
@@ -331,20 +349,17 @@ hed <- hed %>%
          hed_female = labelled(hed_female, label = "Heavy episodic drinking past 30 days (%): females"))
 
 
+
 # 20-hed_agestd -----------------------------------------------------------
 
 # Import data
 hed_agestd <- gho_data("SA_0000001739")
-# hed_agestd_2 <- gho_data("SA_0000001739_ARCHIVED")
 
 ## Omitting "SA_0000001739_ARCHIVED" (no relevant data)
 
-# Join data
-# hed_agestd <- hed_agestd_1 %>% 
-#   full_join(hed_agestd_2, by = names(.))
-
 # Rename variables and prepare categories
-hed_agestd <- hed_agestd[,c(4,6,8,16)] %>% 
+hed_agestd <- filter(hed_agestd, SpatialDimType == "COUNTRY") %>% 
+  select(4,6,8,16) %>% 
   setNames(c("iso3c", "year", "dim", "hed_agestd")) %>% 
   mutate(dim = recode(dim, "BTSX" = "", "MLE" = "_male", "FMLE" = "_female"))
 
@@ -363,140 +378,146 @@ hed_agestd <- hed_agestd %>%
          hed_agestd_female = labelled(hed_agestd_female, label = "Heavy episodic drinking past 30 days (%): females"))
 
 
-# 21-dep_12months ----------------------------------------------------------
+
+# 21-dep_12monthss ----------------------------------------------------------
 
 # Import data
-ad_12m_1 <- gho_data("SA_0000001461")
-ad_12m_2 <- gho_data("SA_0000001461_ARCHIVED")
+dep_12months_1 <- gho_data("SA_0000001461")
+dep_12months_2 <- gho_data("SA_0000001461_ARCHIVED")
 
 # Join data
-ad_12m <- ad_12m_1 %>% 
-  full_join(ad_12m_2, by = names(.)) ; rm(ad_12m_1, ad_12m_2)
+dep_12months <- dep_12months_1 %>% 
+  full_join(dep_12months_2, by = names(.)) ; rm(dep_12months_1, dep_12months_2)
 
 # Rename variables and prepare categories
-ad_12m <- ad_12m[,c(4,6,8,15)] %>% 
-  setNames(c("iso3c", "year", "dim", "ad_12m")) %>% 
+dep_12months <- dep_12months[,c(4,6,8,15)] %>% 
+  setNames(c("iso3c", "year", "dim", "dep_12months")) %>% 
   mutate(dim = recode(dim, "BTSX" = "", "MLE" = "_male", "FMLE" = "_female"))
 
 # Fix numeric variables
-ad_12m <- ad_12m %>% 
-  mutate(ad_12m = str_replace_all(ad_12m, "\\s*\\[.*\\]", "") %>% as.numeric)
+dep_12months <- dep_12months %>% 
+  mutate(dep_12months = str_replace_all(dep_12months, "\\s*\\[.*\\]", "") %>% as.numeric)
 
 # Generar una columna para hombres y mujeres, según su categoría
-ad_12m <- ad_12m %>%
+dep_12months <- dep_12months %>%
   pivot_wider(names_from = dim,
-              values_from = ad_12m,
-              names_prefix = "ad_12m") %>% 
+              values_from = dep_12months,
+              names_prefix = "dep_12months") %>% 
   relocate(c(1, 2:4, 5))
 
 # Labelled variables
-ad_12m <- ad_12m %>% 
-  mutate(ad_12m = labelled(ad_12m, label = "Heavy episodic drinking past 30 days (%)"),
-         ad_12m_male = labelled(ad_12m_male, label = "Heavy episodic drinking past 30 days (%): males"),
-         ad_12m_female = labelled(ad_12m_female, label = "Heavy episodic drinking past 30 days (%): females"))
+dep_12months <- dep_12months %>% 
+  mutate(dep_12months = labelled(dep_12months, label = "Heavy episodic drinking past 30 days (%)"),
+         dep_12months_male = labelled(dep_12months_male, label = "Heavy episodic drinking past 30 days (%): males"),
+         dep_12months_female = labelled(dep_12months_female, label = "Heavy episodic drinking past 30 days (%): females"))
 
 
-# 22-aud_12m --------------------------------------------------------------
+# 22-aud_12months --------------------------------------------------------------
 
 # Import data
-aud_12m_1 <- gho_data("SA_0000001462")
-aud_12m_2 <- gho_data("SA_0000001462_ARCHIVED")
+aud_12months_1 <- gho_data("SA_0000001462")
+aud_12months_2 <- gho_data("SA_0000001462_ARCHIVED")
 
 # Join data
-aud_12m <- aud_12m_1 %>% 
-  full_join(aud_12m_2, by = names(.)) ; rm(aud_12m_1, aud_12m_2)
+aud_12months <- aud_12months_1 %>% 
+  full_join(aud_12months_2, by = names(.)) ; rm(aud_12months_1, aud_12months_2)
 
 # Rename variables and prepare categories
-aud_12m <- aud_12m[,c(4,6,8,15)] %>% 
-  setNames(c("iso3c", "year", "dim", "aud_12m")) %>% 
+aud_12months <- filter(aud_12months, SpatialDimType == "COUNTRY") %>% 
+  select(4,6,8,15) %>% 
+  setNames(c("iso3c", "year", "dim", "aud_12months")) %>% 
   mutate(dim = recode(dim, "BTSX" = "", "MLE" = "_male", "FMLE" = "_female"))
 
 # Fix numeric variables
-aud_12m <- aud_12m %>% 
-  mutate(aud_12m = str_replace_all(aud_12m, "\\s*\\[.*\\]", "") %>% as.numeric)
+aud_12months <- aud_12months %>% 
+  mutate(aud_12months = str_replace_all(aud_12months, "\\s*\\[.*\\]", "") %>% as.numeric)
 
 # Generar una columna para hombres y mujeres, según su categoría
-aud_12m <- aud_12m %>%
+aud_12months <- aud_12months %>%
   pivot_wider(names_from = dim,
-              values_from = aud_12m,
-              names_prefix = "aud_12m") %>% 
+              values_from = aud_12months,
+              names_prefix = "aud_12months") %>% 
   relocate(c(1, 2:4, 5))
 
 # Labelled variables
-aud_12m <- aud_12m %>% 
-  mutate(aud_12m = labelled(aud_12m, label = "Alcohol use disorders (15+), 12 month prevalence (%)"),
-         aud_12m_male = labelled(aud_12m_male, label = "Alcohol use disorders (15+), 12 month prevalence (%): males"),
-         aud_12m_female = labelled(aud_12m_female, label = "Alcohol use disorders (15+), 12 month prevalence (%): females"))
+aud_12months <- aud_12months %>% 
+  mutate(aud_12months = labelled(aud_12months, label = "Alcohol use disorders (15+), 12 month prevalence (%)"),
+         aud_12months_male = labelled(aud_12months_male, label = "Alcohol use disorders (15+), 12 month prevalence (%): males"),
+         aud_12months_female = labelled(aud_12months_female, label = "Alcohol use disorders (15+), 12 month prevalence (%): females"))
 
-# 23-ahu_12m --------------------------------------------------------------
+
+# 23-ahu_12months --------------------------------------------------------------
 
 # Import data
-ahu_12m_1 <- gho_data("SA_0000001754")
-ahu_12m_2 <- gho_data("SA_0000001754_ARCHIVED")
+ahu_12months_1 <- gho_data("SA_0000001754")
+ahu_12months_2 <- gho_data("SA_0000001754_ARCHIVED")
 
 # Join data
-ahu_12m <- ahu_12m_1 %>% 
-  full_join(ahu_12m_2, by = names(.)) ; rm(ahu_12m_1, ahu_12m_2)
+ahu_12months <- ahu_12months_1 %>% 
+  full_join(ahu_12months_2, by = names(.)) ; rm(ahu_12months_1, ahu_12months_2)
 
 # Rename variables and prepare categories
-ahu_12m <- ahu_12m[,c(4,6,8,15)] %>% 
-  setNames(c("iso3c", "year", "dim", "ahu_12m")) %>% 
+ahu_12months <- filter(ahu_12months, SpatialDimType == "COUNTRY") %>% 
+  select(4,6,8,15) %>% 
+  setNames(c("iso3c", "year", "dim", "ahu_12months")) %>% 
   mutate(dim = recode(dim, "BTSX" = "", "MLE" = "_male", "FMLE" = "_female"))
 
 # Fix numeric variables
-ahu_12m <- ahu_12m %>% 
-  mutate(ahu_12m = str_replace_all(ahu_12m, "\\s*\\[.*\\]", "") %>% as.numeric)
+ahu_12months <- ahu_12months %>% 
+  mutate(ahu_12months = str_replace_all(ahu_12months, "\\s*\\[.*\\]", "") %>% as.numeric)
 
 # Generar una columna para hombres y mujeres, según su categoría
-ahu_12m <- ahu_12m %>%
+ahu_12months <- ahu_12months %>%
   pivot_wider(names_from = dim,
-              values_from = ahu_12m,
-              names_prefix = "ahu_12m") %>% 
+              values_from = ahu_12months,
+              names_prefix = "ahu_12months") %>% 
   relocate(c(1, 2:4, 5))
 
 # Labelled variables
-ahu_12m <- ahu_12m %>% 
-  mutate(ahu_12m = labelled(ahu_12m, label = "Alcohol use disorders (15+), 12 month prevalence (%)"),
-         ahu_12m_male = labelled(ahu_12m_male, label = "Alcohol use disorders (15+), 12 month prevalence (%): males"),
-         ahu_12m_female = labelled(ahu_12m_female, label = "Alcohol use disorders (15+), 12 month prevalence (%): females"))
+ahu_12months <- ahu_12months %>% 
+  mutate(ahu_12months = labelled(ahu_12months, label = "Alcohol use disorders (15+), 12 month prevalence (%)"),
+         ahu_12months_male = labelled(ahu_12months_male, label = "Alcohol use disorders (15+), 12 month prevalence (%): males"),
+         ahu_12months_female = labelled(ahu_12months_female, label = "Alcohol use disorders (15+), 12 month prevalence (%): females"))
 
 
 # Merge -------------------------------------------------------------------
 
+# Joining all variables into a dataset of the dimension
 consumption_dataset <- apc %>% 
   full_join(rec_apc, by = c("iso3c", "year")) %>% 
   full_join(unrec_apc, by = c("iso3c", "year")) %>% 
   full_join(tourist, by = c("iso3c", "year"))  %>% 
   full_join(drinkers, by = c("iso3c", "year")) %>% 
   full_join(abstainers, by = c("iso3c", "year")) %>% 
-  full_join(abstainers_12m, by = c("iso3c", "year")) %>% 
+  full_join(abstainers_12month, by = c("iso3c", "year")) %>% 
   full_join(former_drinkers, by = c("iso3c", "year")) %>% 
-  full_join(consumers_12m, by = c("iso3c", "year")) %>% 
+  full_join(consumers_12month, by = c("iso3c", "year")) %>% 
   full_join(hed, by = c("iso3c", "year")) %>% 
   full_join(hed_agestd, by = c("iso3c", "year")) %>% 
-  full_join(ad_12m, by = c("iso3c", "year")) %>% 
-  full_join(aud_12m, by = c("iso3c", "year")) %>% 
-  full_join(ahu_12m, by = c("iso3c", "year"))
+  full_join(dep_12months, by = c("iso3c", "year")) %>% 
+  full_join(aud_12months, by = c("iso3c", "year")) %>% 
+  full_join(ahu_12months, by = c("iso3c", "year"))
 
 
-# iso3c --> country
-consumption_dataset <- consumption_dataset %>% 
+# Adding the country names and reorganizing variables
+consumption_dataset <- consumption_dataset %>%
+  mutate(country = countrycode(iso3c, origin = "iso3c", destination = "country.name")) %>%
   mutate(iso3c = labelled(iso3c, 
                           labels = setNames(unique(iso3c), 
                                             countrycode(unique(iso3c),
                                                         origin = 'iso3c',
                                                         destination = 'country.name')),
                           label = "Country iso3c code"),
-         year = labelled(year, label = "Year")) %>% 
-  rename("country" = "iso3c")
+         year = labelled(year, label = "Year")) %>% relocate(ncol(.))
 
-# Success message!
-cat("\n\21 consumption_dataset -- successfully loaded\n\n")
+# Success message: dataset loaded
+cat("\n\21 (DIM3) consumption_dataset (data.frame) -- successfully loaded\n\n")
 
 # Print runtime
 end = Sys.time() - start ; print(end)
 
 
-# Remove objects
-rm(list = ls()[!ls() %in% c("alcohol_harm_dataset", "income_dataset", "consumption_dataset")])
+# Remove objects from the workspace
+rm(list = ls()[!ls() %in% dataset_names])
+gc()
 
