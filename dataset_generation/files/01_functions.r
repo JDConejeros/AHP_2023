@@ -13,3 +13,11 @@ is.serie <- function(serie) {
   }
 }
 
+
+# Dataset names values
+dataset_names <- c("dataset_names", "na_count", "globalSummary",
+                     "alcohol_harm_dataset", "income_dataset", "consumption_dataset",
+                     "inequalities_dataset", "population_characteristics_dataset", 
+                     "environmental_characteristics_dataset", "risk_factors_dataset", 
+                     "comorbidities_dataset", "infrastructure_dataset",
+                     "public_policy_dataset")
