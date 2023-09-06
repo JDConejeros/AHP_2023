@@ -42,6 +42,7 @@ source("dataset_generation/files/11_D10_public_policy_dataset.r") %>% suppressWa
 ahp_data <- alcohol_harm_dataset %>% 
   full_join(income_dataset, by = c("year", "country", "iso3c")) %>% 
   full_join(consumption_dataset, by = c("year", "country", "iso3c")) %>% 
+  full_join(inequalities_dataset, by = c("year", "country", "iso3c")) %>% 
   full_join(population_characteristics_dataset, by = c("year", "country", "iso3c")) %>% 
   # full_join(environmental_characteristics_dataset, by = c("year", "country", "iso3c")) %>% ## TODO: retrieve temperature data
   full_join(risk_factors_dataset, by = c("year", "country", "iso3c")) %>% 
