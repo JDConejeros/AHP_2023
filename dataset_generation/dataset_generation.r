@@ -51,8 +51,10 @@ ahp_data <- alcohol_harm_dataset %>%
   full_join(public_policy_dataset, by = c("year", "country", "iso3c")) %>% 
   arrange(country, year)
 
-# Exporting data ----------------------------------------------------------
+# Remove cases from unidentified countries
+ahp_data <- ahp_data %>% filter(!is.na(country))
 
+# Exporting data ----------------------------------------------------------
 
 # Stata
 write.dta(ahp_data, "dataset_generation/out/ahp_data.dta")
