@@ -12,6 +12,7 @@ start = Sys.time()
 apc_1 <- gho_data("SA_0000001688") # n = 237, 2000 2005 2010 2015 2019
 apc_2 <- gho_data("SA_0000001822") # n = 194 countries, 2018
 apc_3 <- gho_data("SA_0000001822_ARCHIVED") # n = 194 countries, 2010 2016
+
 apc_4 <- gho_data("SA_0000001688_ARCHIVED")
 
 # Omitted SA_0000001688_ARCHIVED
@@ -23,9 +24,9 @@ apc <- apc_1 %>%
 
 # Rename variables and prepare categories
 apc <- filter(apc, SpatialDimType == "COUNTRY") %>% 
-  select(SpatialDim, TimeDim, Dim1, NumericValue) %>% 
+  select(4,6,8,16) %>% 
   setNames(c("iso3c", "year", "dim", "apc")) %>% 
-  mutate(dim = recode(dim, "SEX_BTSX" = "", "SEX_MLE" = "_male", "SEX_FMLE" = "_female"))
+  mutate(dim = recode(dim, "BTSX" = "", "MLE" = "_male", "FMLE" = "_female"))
 
 # Generar una columna para hombres y mujeres, según su categoría
 apc <- apc %>%
@@ -57,14 +58,14 @@ rec_apc <- gho_data("SA_0000001400")
 
 # Select and fix variables
 rec_apc <- filter(rec_apc, SpatialDimType == "COUNTRY") %>% 
-  select(SpatialDim, TimeDim, Dim1, NumericValue) %>% 
+  select(4,6,8,16) %>% 
   setNames(c("iso3c", "year", "dim", "rec_apc")) %>% 
   mutate(dim = recode(dim, 
-                      "ALCOHOLTYPE_SA_TOTAL" = "",
-                      "ALCOHOLTYPE_SA_BEER" = "_beer", 
-                      "ALCOHOLTYPE_SA_SPIRITS" = "_spirits",
-                      "ALCOHOLTYPE_SA_WINE" = "_wine", 
-                      "ALCOHOLTYPE_SA_OTHER_ALCOHOL" = "_other")) %>% 
+                      "SA_TOTAL" = "",
+                      "SA_BEER" = "_beer", 
+                      "SA_SPIRITS" = "_spirits",
+                      "SA_WINE" = "_wine", 
+                      "SA_OTHER_ALCOHOL" = "_other")) %>% 
   as_tibble
 
 # Extract species from consumption
@@ -82,20 +83,18 @@ rec_apc <- rec_apc %>%
          rec_apc_beer = labelled(rec_apc_beer, label = "Recorded alcohol per capita consumption: Beer"), 
          rec_apc_other = labelled(rec_apc_other, label = "Recorded alcohol per capita consumption: Other"))
 
+
+
 # 12-unrec_apc ------------------------------------------------------------
 
 # Import data
 unrec_apc_1 <- gho_data("SA_0000001406") # 2010 2005 2015
 unrec_apc_2 <- gho_data("SA_0000001821") # 2019
-unrec_apc_3 <- gho_data("SA_0000001821_ARCHIVED") %>% filter(TimeDim == 2016)
+unrec_apc_3 <- gho_data("SA_0000001821_ARCHIVED") %>% filter(!Id %in% c(22385153,
+                                                                        22385154,
+                                                                        22385323,
+                                                                        22385346)) # 2016 2010
 
-
-# filter(!Id %in% c(22385153,
-#                   22385154,
-#                   22385323,
-#                   22385346)) # 2016 2010
-
-                                                                        
 ## n = 193 countries (each one)
 
 ## Omitted "SA_0000001406_ARCHIVED", "SA_0000001748", "SA_0000001748_ARCHIVED"
@@ -107,7 +106,7 @@ unrec_apc <- unrec_apc_1 %>%
 
 # Extract and rename variables of interest
 unrec_apc <- filter(unrec_apc, SpatialDimType == "COUNTRY" & !Id %in% c(4945420, 4945421)) %>% 
-  select(SpatialDim, TimeDim, NumericValue) %>% 
+  select(4,6,16) %>% 
   setNames(c("iso3c", "year", "unrec_apc"))
 
 # Labelled variables
@@ -140,7 +139,7 @@ tourist <- filter(tourist, SpatialDimType == "COUNTRY" &
                                7570630,
                                7570637, 
                                7570644)) %>% 
-  select(SpatialDim, TimeDim, NumericValue) %>% 
+  select(4,6,16) %>% 
   setNames(c("iso3c", "year", "tourist"))
 
 # Labelled variables
@@ -163,9 +162,9 @@ drinkers <- drinkers_1 %>%
 
 # Rename variables and prepare categories
 drinkers <- filter(drinkers, SpatialDimType == "COUNTRY") %>% 
-  select(SpatialDim, TimeDim, Dim1, NumericValue) %>%
+  select(3,5,7,15) %>%
   setNames(c("iso3c", "year", "dim", "drinkers")) %>%
-  mutate(dim = recode(dim, "SEX_BTSX" = "", "SEX_MLE" = "_male", "SEX_FMLE" = "_female"))
+  mutate(dim = recode(dim, "BTSX" = "", "MLE" = "_male", "FMLE" = "_female"))
 
 # Generar una columna para hombres y mujeres, según su categoría
 drinkers <- drinkers %>%
@@ -197,17 +196,14 @@ abstainers <- abstainers_1 %>%
 
 # Rename variables and prepare categories
 abstainers <- filter(abstainers, SpatialDimType == "COUNTRY") %>% 
-  select(SpatialDim, TimeDim, Dim1, Value) %>%
+  select(3,5,7,14) %>%
   setNames(c("iso3c", "year", "dim", "abstainers")) %>%
-  mutate(dim = recode(dim, "SEX_BTSX" = "", "SEX_MLE" = "_male", "SEX_FMLE" = "_female"))
+  mutate(dim = recode(dim, "BTSX" = "", "MLE" = "_male", "FMLE" = "_female"),
+         abstainers = as.numeric(abstainers))
 
 # Fix numeric variables
 abstainers <- abstainers %>%
   mutate(abstainers = str_replace_all(abstainers, "\\s*\\[.*\\]", "") %>% as.numeric)
-
-## Note:
-## NAs are generated because in the original dataset the missing cases were recorded with the string "."
-
 
 # Generar una columna para hombres y mujeres, según su categoría
 abstainers <- abstainers %>%
@@ -235,9 +231,9 @@ abstainers_12month <- abstainers_12month_1 %>%
 
 # Rename variables and prepare categories
 abstainers_12month <- filter(abstainers_12month, SpatialDimType == "COUNTRY") %>% 
-  select(SpatialDim, TimeDim, Dim1, NumericValue) %>% 
+  select(4,6,8,16) %>% 
   setNames(c("iso3c", "year", "dim", "abstainers_12month")) %>% 
-  mutate(dim = recode(dim, "SEX_BTSX" = "", "SEX_MLE" = "_male", "SEX_FMLE" = "_female"))
+  mutate(dim = recode(dim, "BTSX" = "", "MLE" = "_male", "FMLE" = "_female"))
 
 # Generar una columna para hombres y mujeres, según su categoría
 abstainers_12month <- abstainers_12month %>%
@@ -274,9 +270,9 @@ former_drinkers <- former_drinkers_1 %>%
 
 # Rename variables and prepare categories
 former_drinkers <- filter(former_drinkers, SpatialDimType == "COUNTRY") %>% 
-  select(SpatialDim, TimeDim, Dim1, Value) %>% 
+  select(4,6,8,15) %>% 
   setNames(c("iso3c", "year", "dim", "former_drinkers")) %>% 
-  mutate(dim = recode(dim, "SEX_BTSX" = "", "SEX_MLE" = "_male", "SEX_FMLE" = "_female"))
+  mutate(dim = recode(dim, "BTSX" = "", "MLE" = "_male", "FMLE" = "_female"))
 
 # Generar una columna para hombres y mujeres, según su categoría
 former_drinkers <- former_drinkers %>%
@@ -304,9 +300,9 @@ consumers_12month <- consumers_12month_1 %>%
 
 # Rename variables and prepare categories
 consumers_12month <- filter(consumers_12month, SpatialDimType == "COUNTRY") %>% 
-  select(SpatialDim, TimeDim, Dim1, Value) %>% 
+  select(4,6,8,15) %>% 
   setNames(c("iso3c", "year", "dim", "consumers_12month")) %>% 
-  mutate(dim = recode(dim, "SEX_BTSX" = "", "SEX_MLE" = "_male", "SEX_FMLE" = "_female"))
+  mutate(dim = recode(dim, "BTSX" = "", "MLE" = "_male", "FMLE" = "_female"))
 
 # Generar una columna para hombres y mujeres, según su categoría
 consumers_12month <- consumers_12month %>%
@@ -334,9 +330,9 @@ hed <- hed_1 %>%
 
 # Rename variables and prepare categories
 hed <- filter(hed, SpatialDimType == "COUNTRY") %>% 
-  select(SpatialDim, TimeDim, Dim1, Value) %>% 
+  select(4,6,8,16) %>% 
   setNames(c("iso3c", "year", "dim", "hed")) %>% 
-  mutate(dim = recode(dim, "SEX_BTSX" = "", "SEX_MLE" = "_male", "SEX_FMLE" = "_female"))
+  mutate(dim = recode(dim, "BTSX" = "", "MLE" = "_male", "FMLE" = "_female"))
 
 # Generar una columna para hombres y mujeres, según su categoría
 hed <- hed %>%
@@ -363,9 +359,9 @@ hed_agestd <- gho_data("SA_0000001739")
 
 # Rename variables and prepare categories
 hed_agestd <- filter(hed_agestd, SpatialDimType == "COUNTRY") %>% 
-  select(SpatialDim, TimeDim, Dim1, Value) %>% 
+  select(4,6,8,16) %>% 
   setNames(c("iso3c", "year", "dim", "hed_agestd")) %>% 
-  mutate(dim = recode(dim, "SEX_BTSX" = "", "SEX_MLE" = "_male", "SEX_FMLE" = "_female"))
+  mutate(dim = recode(dim, "BTSX" = "", "MLE" = "_male", "FMLE" = "_female"))
 
 # Generar una columna para hombres y mujeres, según su categoría
 hed_agestd <- hed_agestd %>%
@@ -394,15 +390,13 @@ dep_12months <- dep_12months_1 %>%
   full_join(dep_12months_2, by = names(.)) ; rm(dep_12months_1, dep_12months_2)
 
 # Rename variables and prepare categories
-dep_12months <- dep_12months %>% 
-  filter(SpatialDimType == "COUNTRY") %>% 
-  select(SpatialDim, TimeDim, Dim1, Value) %>% 
+dep_12months <- dep_12months[,c(4,6,8,15)] %>% 
   setNames(c("iso3c", "year", "dim", "dep_12months")) %>% 
-  mutate(dim = recode(dim, "SEX_BTSX" = "", "SEX_MLE" = "_male", "SEX_FMLE" = "_female"))
+  mutate(dim = recode(dim, "BTSX" = "", "MLE" = "_male", "FMLE" = "_female"))
 
 # Fix numeric variables
 dep_12months <- dep_12months %>% 
-  mutate(dep_12months = as.numeric(dep_12months))
+  mutate(dep_12months = str_replace_all(dep_12months, "\\s*\\[.*\\]", "") %>% as.numeric)
 
 # Generar una columna para hombres y mujeres, según su categoría
 dep_12months <- dep_12months %>%
@@ -430,13 +424,13 @@ aud_12months <- aud_12months_1 %>%
 
 # Rename variables and prepare categories
 aud_12months <- filter(aud_12months, SpatialDimType == "COUNTRY") %>% 
-  select(SpatialDim, TimeDim, Dim1, Value) %>% 
+  select(4,6,8,15) %>% 
   setNames(c("iso3c", "year", "dim", "aud_12months")) %>% 
-  mutate(dim = recode(dim, "SEX_BTSX" = "", "SEX_MLE" = "_male", "SEX_FMLE" = "_female"))
+  mutate(dim = recode(dim, "BTSX" = "", "MLE" = "_male", "FMLE" = "_female"))
 
 # Fix numeric variables
 aud_12months <- aud_12months %>% 
-  mutate(aud_12months = as.numeric(aud_12months))
+  mutate(aud_12months = str_replace_all(aud_12months, "\\s*\\[.*\\]", "") %>% as.numeric)
 
 # Generar una columna para hombres y mujeres, según su categoría
 aud_12months <- aud_12months %>%
@@ -464,13 +458,13 @@ ahu_12months <- ahu_12months_1 %>%
 
 # Rename variables and prepare categories
 ahu_12months <- filter(ahu_12months, SpatialDimType == "COUNTRY") %>% 
-  select(SpatialDim, TimeDim, Dim1, Value) %>% 
+  select(4,6,8,15) %>% 
   setNames(c("iso3c", "year", "dim", "ahu_12months")) %>% 
-  mutate(dim = recode(dim, "SEX_BTSX" = "", "SEX_MLE" = "_male", "SEX_FMLE" = "_female"))
+  mutate(dim = recode(dim, "BTSX" = "", "MLE" = "_male", "FMLE" = "_female"))
 
 # Fix numeric variables
 ahu_12months <- ahu_12months %>% 
-  mutate(ahu_12months = as.numeric(ahu_12months))
+  mutate(ahu_12months = str_replace_all(ahu_12months, "\\s*\\[.*\\]", "") %>% as.numeric)
 
 # Generar una columna para hombres y mujeres, según su categoría
 ahu_12months <- ahu_12months %>%

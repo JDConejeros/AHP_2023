@@ -1,8 +1,5 @@
 
-# Packages
-
-if(!require("pacman")) install.packages("pacman")
-
+# Data handling
 pacman::p_load(janitor, 
                countrycode, 
                foreign,

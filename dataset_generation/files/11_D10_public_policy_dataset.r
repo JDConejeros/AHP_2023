@@ -5,10 +5,10 @@ start = Sys.time()
 # 52-health_expenditure ---------------------------------------------------
 
 # Import data
-health_expenditure <- WDI(indicator = c("health_expenditure" = "SH.XPD.CHEX.GD.ZS"))
+health_expenditure <- WDI(indicator = "SH.XPD.CHEX.GD.ZS")
 
 # Extracting variables of interest
-health_expenditure <- health_expenditure %>% select(country, year, health_expenditure)
+health_expenditure <- health_expenditure[,c(1,4,5)] %>% setNames(c("country", "year", "health_expenditure"))
 
 # Manually ISO3c code convert
 health_expenditure <- health_expenditure %>% 

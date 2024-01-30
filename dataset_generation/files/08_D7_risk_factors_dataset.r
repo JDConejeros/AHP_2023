@@ -5,12 +5,12 @@ start = Sys.time()
 # 44-obesity --------------------------------------------------------------
 
 # Data import
-obesity <- gho_data("NCD_BMI_30C") %>% filter(Dim1 == "SEX_BTSX" & SpatialDimType == "COUNTRY") 
+obesity <- gho_data("NCD_BMI_30C") %>% filter(Dim1 == "BTSX" & SpatialDimType == "COUNTRY") 
 
 # Rename variables and prepare categories
-obesity <- obesity %>% 
-  select(SpatialDim, TimeDim, NumericValue)%>% 
-  setNames(c("iso3c", "year",  "obesity"))
+obesity <- obesity[,c(4,6,8,16)] %>% 
+  setNames(c("iso3c", "year", "dim", "obesity")) %>% 
+  select(-dim)
 
 # ISO3C code
 obesity <- obesity %>% 
@@ -24,15 +24,16 @@ obesity <- obesity %>%
 obesity <- obesity %>% 
   mutate(obesity = labelled(obesity, label = "Prevalence of obesity among adults, BMI ≥ 30 (crude estimate) (%)"))
 
+
 # 45-bmi ------------------------------------------------------------------
 
 # Import data
-bmi <- gho_data("NCD_BMI_MEANC") %>% filter(Dim1 == "SEX_BTSX" & SpatialDimType == "COUNTRY" & Dim2 == "AGEGROUP_YEARS18-PLUS")
+bmi <- gho_data("NCD_BMI_MEANC") %>% filter(Dim1 == "BTSX" & SpatialDimType == "COUNTRY" & Dim2 == "YEARS18-PLUS")
 
 # Rename variables and prepare categories
-bmi <- bmi %>% 
-  select(SpatialDim, TimeDim, NumericValue) %>% 
-  setNames(c("iso3c", "year", "bmi"))
+bmi <- bmi[,c(4,6,8,16)] %>% 
+  setNames(c("iso3c", "year", "dim", "bmi")) %>% 
+  select(-dim)
 
 # ISO3C code
 bmi <- bmi %>% 
@@ -45,6 +46,8 @@ bmi <- bmi %>%
 # Labelled variables
 bmi <- bmi %>% 
   mutate(bmi = labelled(bmi, label = "Mean Body Mass Index +18 (kg/m2) (crude estimate)"))
+
+
 
 # 46-smoking --------------------------------------------------------------
 
@@ -86,6 +89,7 @@ smoking <- smoking %>%
 # Labelled variables
 smoking <- smoking %>% 
   mutate(smoking = labelled(smoking, label = "Prevalence of daily smoking (IHME)"))
+
 
 # Merge -------------------------------------------------------------------
 

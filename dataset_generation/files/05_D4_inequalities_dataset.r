@@ -13,7 +13,7 @@ heq <- readRDS("dataset_generation/files/data/V-Dem-CY-Core_R_v13/V-Dem-CY-Core-
 # select variables
 heq <- heq[, c("country_name", "year", "v2pehealth")] %>%
   setNames(c("country", "year", "heq")) %>%
-  filter(year >= 1960 & !str_detect(country, "Gaza"))
+  filter(year >= 1960 & country != "Palestina/Gaza")
 
 # iso3c code (warnings)
 heq <- heq %>%
