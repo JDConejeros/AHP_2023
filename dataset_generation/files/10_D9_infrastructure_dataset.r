@@ -6,10 +6,10 @@ start = Sys.time()
 # 51-hospital_beds --------------------------------------------------------
 
 # Import data
-hospital_beds <- WDI(indicator = "SH.MED.BEDS.ZS")
+hospital_beds <- WDI(indicator = c("hospital_beds" =  "SH.MED.BEDS.ZS"))
 
 # Extracting variables of interest
-hospital_beds <- hospital_beds[,c(1,4,5)] %>% setNames(c("country", "year", "hospital_beds"))
+hospital_beds <- hospital_beds %>% select(country, year, hospital_beds)
 
 # Manually ISO3c code convert
 hospital_beds <- hospital_beds %>% 
